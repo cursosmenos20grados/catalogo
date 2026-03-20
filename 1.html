@@ -1,1 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú IA - Matrix Edition</title>
+    <style>
+        :root { --matrix-green: #00ff41; --dark-bg: #050505; }
+        
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; 
+            background-color: var(--dark-bg); 
+            color: white; 
+            overflow-x: hidden;
+        }
 
+        #matrix-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.25;
+        }
+
+        #welcome-screen { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); z-index: 1000; display: flex; 
+            flex-direction: column; align-items: center; justify-content: center; 
+            text-align: center; padding: 20px;
+        }
+
+        .ai-avatar { 
+            width: 150px; height: 150px; border-radius: 50%; 
+            border: 3px solid var(--matrix-green); margin-bottom: 20px; 
+            box-shadow: 0 0 20px var(--matrix-green);
+        }
+
+        .app-container { max-width: 500px; margin: 0 auto; padding: 15px; display: none; }
+        
+        .header-ia { 
+            background: rgba(20, 20, 20, 0.85); 
+            padding: 15px; border-radius: 15px; 
+            border: 1px solid var(--matrix-green);
+            margin-bottom: 20px; 
+        }
+
+        .producto-card { 
+            background: rgba(30, 30, 30, 0.9); 
+            border-radius: 12px; margin-bottom: 15px; padding: 10px; 
+            display: flex; align-items: center; 
+            border-left: 4px solid var(--matrix-green);
+        }
+
+        .producto-img { 
+            width: 80px; height: 80px; border-radius: 8px; 
+            object-fit: cover; margin-right: 15px; 
+            border: 1px solid #444;
+        }
+
+        .info { flex-grow: 1; }
+        .precio { color: var(--matrix-green); font-weight: bold; font-size: 1.2em; }
+
+        .btn-add { 
+            background: var(--matrix-green); color: black; border: none; 
+            padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer;
+        }
+
+        .chat-input { 
+            width: 70%; padding: 10px; border-radius: 20px; border: 1px solid var(--matrix-green);
+            background: black; color: white;
+        }
+
+        .btn-whatsapp { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #25d366; color: white; border: none; padding: 15px 30px; 
+            border-radius: 30px; font-weight: bold; width: 85%; z-index: 99;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="matrix-canvas"></canvas>
+
+<div id="welcome-screen">
+    <img src="https://raw.githubusercontent.com/cursosmenos20grados/catalogo/main/moza_robot.jpg?raw=true" class="ai-avatar">
+    <h1 style="color:var(--matrix-green)">SYSTEM ONLINE</h1>
+    <p>Seleccione su ubicación:</p>
+    <select id="mesa-selector" style="padding:10px; background:black; color:white; border:1px solid var(--matrix-green); width: 200px;">
+        <option value="">-- Ubicación --</option>
+        <optgroup label="SALÓN PRINCIPAL">
+            <option value="Mesa 1">Mesa 01</option>
+            <option value="Mesa 2">Mesa 02</option>
+            <option value="Mesa 3">Mesa 03</option>
+            <option value="Barra">Barra Central</option>
+        </optgroup>
+        <optgroup label="EXTERIOR">
+            <option value="Vereda 1">Vereda 01</option>
+            <option value="Vereda 2">Vereda 02</option>
+        </optgroup>
+    </select><br><br>
+    <button onclick="iniciarApp()" style="padding:15px 30px; background:var(--matrix-green); border:none; font-weight:bold; border-radius:5px; cursor:pointer;">CONECTAR</button>
+</div>
+
+<div id="app" class="app-container">
+    <div class="header-ia">
+        <small style="color:var(--matrix-green)">[PROTOCOLO DE ASISTENCIA ACTIVO]</small>
+        <p id="moza-txt">¿Qué desea solicitar al sistema hoy?</p>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="user-ask" class="chat-input" placeholder="Consultar IA...">
+            <button onclick="consultarIA()" class="btn-add">ASK</button>
+        </div>
+    </div>
+
+    <div id="lista-menu"></div>
+    <div style="height: 100px;"></div>
+    <button class="btn-whatsapp" onclick="enviarPedido()">ENVIAR PEDIDO POR WHATSAPP</button>
+</div>
+
+<script>
+    // --- EFECTO MATRIX ---
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const letters = "01010101010101010101010101010101010101";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function drawMatrix() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#00ff41";
+        ctx.font = fontSize + "px monospace";
+        for (let i = 0; i < drops.length; i++) {
+            const text = letters.charAt(Math.floor(Math.random() * letters.length));
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        }
+    }
+    setInterval(drawMatrix, 50);
+
+    // --- LÓGICA DE LA APP ---
+    const SHEET_ID = '1vRbg-JdC7bjpgQH1vwdq1m8Or_FTyZXG56lI152bs-_rjFp8yCNYnujB8CCkO_gFkmvEfczJ9uMaXzK';
+    const CSV_URL = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?gid=0&single=true&output=csv`;
+    let baseDeDatos = [];
+    let carrito = [];
+    let mesaActual = "";
+
+    async function cargarDatos() {
+        try {
+            const res = await fetch(CSV_URL);
+            const data = await res.text();
+            const filas = data.split('\n').slice(1);
+            baseDeDatos = filas.map(f => {
+                const c = f.split(',');
+                return {
+                    id:c[0], cat:c[1], nombre:c[2], desc:c[3], precio:c[4], 
+                    img:c[5], disp:c[6], dest:c[7], suger:c[8], tags:c[9], 
+                    wa:c[10] // <--- IMPORTANTE: Lee la columna K
+                };
+            });
+            renderizar();
+        } catch (e) { alert("Error cargando base de datos."); }
+    }
+
+    function renderizar() {
+        const cont = document.getElementById('lista-menu');
+        cont.innerHTML = "";
+        baseDeDatos.filter(p => p.disp && p.disp.trim() === "SI").forEach(p => {
+            cont.innerHTML += `
+                <div class="producto-card">
+                    <img src="${p.img.trim()}" class="producto-img" onerror="this.src='https://via.placeholder.com/150?text=SIN+FOTO'">
+                    <div class="info">
+                        <strong>${p.nombre}</strong><br>
+                        <small style="color:#aaa">${p.desc}</small><br>
+                        <span class="precio">$${p.precio}</span>
+                    </div>
+                    <button class="btn-add" onclick="agregar('${p.nombre}', ${p.precio})">+</button>
+                </div>`;
+        });
+    }
+
+    function iniciarApp() {
+        mesaActual = document.getElementById('mesa-selector').value;
+        if(!mesaActual) return alert("Seleccione su ubicación");
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        cargarDatos();
+    }
+
+    function agregar(n, p) {
+        carrito.push({nombre:n, precio:p});
+        document.getElementById('moza-txt').innerText = `Agregado: ${n}. ¿Algo más?`;
+    }
+
+    function consultarIA() {
+        const q = document.getElementById('user-ask').value.toLowerCase();
+        const txt = document.getElementById('moza-txt');
+        if(q.includes("comer") || q.includes("recomienda")) {
+            const sug = baseDeDatos.find(p => p.dest.trim() === "SI");
+            txt.innerText = sug ? sug.suger : "Te recomiendo nuestras especialidades del día.";
+        } else {
+            txt.innerText = "Buscando en protocolos... revisa nuestras opciones destacadas.";
+        }
+    }
+
+    function enviarPedido() {
+        if (carrito.length === 0) return alert("El pedido está vacío.");
+        
+        // Toma el número de la primera fila, columna K del Excel
+        const numWA = (baseDeDatos[0] && baseDeDatos[0].wa) ? baseDeDatos[0].wa.trim() : "54911XXXXXXXX";
+
+        let total = 0;
+        let lista = `*NUEVO PEDIDO - SISTEMA IA*\n*UBICACIÓN:* ${mesaActual}\n\n`;
+        
+        carrito.forEach(i => { 
+            lista += `> ${i.nombre} ($${i.precio})\n`; 
+            total += parseFloat(i.precio); 
+        });
+        
+        lista += `\n*TOTAL:* $${total.toFixed(2)}`;
+        const urlWa = `https://wa.me/${numWA}?text=${encodeURIComponent(lista)}`;
+        window.open(urlWa, '_blank');
+    }
+</script>
+
+</body>
+</html>
