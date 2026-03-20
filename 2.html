@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin | Helados.mix</title>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: white; padding: 20px; }
+        .card { background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 5px solid #2ecc71; }
+        .no-stock { border-left-color: #e74c3c; opacity: 0.6; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-edit { background: #3498db; color: white; padding: 10px; border-radius: 8px; text-decoration: none; font-size: 0.8em; }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: #334155; padding: 15px; border-radius: 10px; text-align: center; }
+        .precio { color: #2ecc71; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2>Control Helados.mix</h2>
+    <a href="https://docs.google.com/spreadsheets/d/19C3LcmEyUhJ-feULW6wa-vgGkXbmJAsCP84cYnK_5ZU/edit" target="_blank" class="btn-edit">📝 EDITAR EXCEL</a>
+</div>
+
+<div class="stats">
+    <div class="stat-box">
+        <small>Productos Activos</small>
+        <h3 id="count-active">0</h3>
+    </div>
+    <div class="stat-box">
+        <small>Sin Stock</small>
+        <h3 id="count-inactive" style="color:#e74c3c">0</h3>
+    </div>
+</div>
+
+<div id="admin-lista">Cargando inventario...</div>
+
+<script>
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRbg-JdC7bjpgQH1vwdq1m8Or_FTyZXG56lI152bs-_rjFp8yCNYnujB8CCkO_gFkmvEfczJ9uMaXzK/pub?output=csv';
+
+    async function cargarAdmin() {
+        const res = await fetch(CSV_URL);
+        const data = await res.text();
+        const filas = data.replace(/\r/g, "").split('\n').slice(1);
+        
+        const productos = filas.map(f => {
+            const c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            return {
+                nombre: c[2] ? c[2].replace(/"/g, "") : "Sin nombre",
+                precio: c[4] || "0",
+                disp: c[6] ? c[6].toUpperCase().trim() : "NO"
+            };
+        }).filter(p => p.nombre !== "Sin nombre");
+
+        const cont = document.getElementById('admin-lista');
+        cont.innerHTML = "";
+        
+        let activos = 0;
+        let inactivos = 0;
+
+        productos.forEach(p => {
+            const esActivo = p.disp.includes("SI");
+            if(esActivo) activos++; else inactivos++;
+
+            cont.innerHTML += `
+                <div class="card ${esActivo ? '' : 'no-stock'}">
+                    <strong>${p.nombre}</strong><br>
+                    <span class="precio">$${p.precio}</span> | 
+                    <span>${esActivo ? '✅ EN VENTA' : '❌ PAUSADO'}</span>
+                </div>`;
+        });
+
+        document.getElementById('count-active').innerText = activos;
+        document.getElementById('count-inactive').innerText = inactivos;
+    }
+
+    cargarAdmin();
+</script>
+</body>
+</html>
