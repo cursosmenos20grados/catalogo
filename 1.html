@@ -18,9 +18,6 @@
 <link rel="icon" href="https://github.com/cursosmenos20grados/catalogo/blob/main/moza_robot.jpg?raw=true">
 <link rel="apple-touch-icon" href="https://github.com/cursosmenos20grados/catalogo/blob/main/moza_robot.jpg?raw=true">
    
-    
-    
-    <title>Catálogo Digital</title>
     <style>
         :root {
             --primary: #2ecc71;
@@ -35,7 +32,29 @@
             background: radial-gradient(circle at top, #1e293b, #0f172a);
             background-attachment: fixed;
             color: var(--text);
-            padding-bottom: 110px;
+            padding-bottom: 120px;
+            scroll-behavior: smooth; /* SCROLL SUAVE ACTIVADO */
+        }
+
+        /* NAVEGACIÓN DE CATEGORÍAS */
+        .category-nav {
+            display: flex; gap: 10px; overflow-x: auto; padding: 15px;
+            position: sticky; top: 0; background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px); z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            scrollbar-width: none;
+        }
+        .category-nav::-webkit-scrollbar { display: none; }
+        
+        .cat-btn {
+            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1);
+            color: white; padding: 8px 18px; border-radius: 20px;
+            white-space: nowrap; font-size: 0.85em; cursor: pointer;
+        }
+
+        .section-title { 
+            padding: 25px 15px 10px; color: var(--primary); 
+            text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.9em; font-weight: bold;
         }
 
         #welcome-screen {
@@ -50,24 +69,12 @@
             box-shadow: 0 0 30px rgba(46, 204, 113, 0.3);
         }
 
-        .app-container { max-width: 500px; margin: 0 auto; padding: 15px; display: none; }
-
-        .header {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            padding: 20px; border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 25px; text-align: center;
-        }
+        .app-container { max-width: 500px; margin: 0 auto; display: none; }
 
         .producto-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(8px);
-            border-radius: 15px; margin-bottom: 12px; padding: 12px;
-            display: flex; align-items: center;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            background: var(--card-bg); border-radius: 15px; margin: 0 15px 12px; padding: 12px;
+            display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease; cursor: pointer;
         }
 
         .producto-card.selected {
@@ -83,19 +90,10 @@
             flex-shrink: 0;
         }
 
-        .selected .checkbox-custom {
-            background: var(--primary); border-color: var(--primary);
-        }
+        .selected .checkbox-custom { background: var(--primary); border-color: var(--primary); }
+        .selected .checkbox-custom::after { content: '✓'; color: white; font-size: 16px; font-weight: bold; }
 
-        .selected .checkbox-custom::after {
-            content: '✓'; color: white; font-size: 16px; font-weight: bold;
-        }
-
-        .producto-img {
-            width: 75px; height: 75px; border-radius: 12px;
-            object-fit: cover; margin-right: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
+        .producto-img { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; margin-right: 15px; }
 
         .info { flex-grow: 1; }
         .info strong { display: block; font-size: 1.1em; }
@@ -109,21 +107,17 @@
             width: 90%; max-width: 420px; z-index: 99;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             display: flex; justify-content: space-between; align-items: center;
-            font-size: 1.1em;
         }
 
-        .badge-info {
-            background: rgba(255,255,255,0.2);
-            padding: 5px 12px; border-radius: 20px; font-size: 0.8em;
-        }
+        .badge-info { background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; font-size: 0.8em; }
     </style>
 </head>
 <body>
 
 <div id="welcome-screen">
-    <img src="https://raw.githubusercontent.com/cursosmenos20grados/catalogo/main/moza_robot.jpg" class="ai-avatar">
-    <h2>Catálogo Digital</h2>
-    <p style="color: #94a3b8; margin-bottom: 25px;">Seleccione su ubicación para comenzar</p>
+    <img src="https://github.com/cursosmenos20grados/catalogo/blob/main/moza_robot.jpg?raw=true" class="ai-avatar">
+    <h2>Helados.mix</h2>
+    <p style="color: #94a3b8; margin-bottom: 25px;">Seleccione su ubicación</p>
     
     <select id="mesa-selector" style="padding:14px; background:#1e293b; color:white; border:1px solid #444; width: 260px; border-radius: 12px; font-size: 1em;">
         <option value="">-- ¿Dónde se encuentra? --</option>
@@ -133,37 +127,25 @@
             <option value="Mesa 3">Mesa 03</option>
             <option value="Mesa 4">Mesa 04</option>
             <option value="Mesa 5">Mesa 05</option>
-             <option value="Mesa 6">Mesa 06</option>
-            <option value="Mesa 7">Mesa 07</option>
-            <option value="Mesa 8">Mesa 08</option>
-            <option value="Mesa 9">Mesa 09</option>
-            <option value="Mesa 10">Mesa 010</option>
             <option value="Barra">Barra Central</option>
         </optgroup>
-        <optgroup label="EXTERIOR">
-            <option value="Vereda 1">Vereda 01</option>
-            <option value="Vereda 2">Vereda 02</option>
-            <option value="Vereda 3">Vereda 03</option>
-             <option value="Vereda 4">Vereda 04</option>
-             <option value="Vereda 5">Vereda 05</option>
-             <option value="Vereda 6">Vereda 06</option>
-             <option value="Vereda 7">Vereda 07</option>
-             <option value="Vereda 8">Vereda 08</option>
-             <option value="Vereda 9">Vereda 09</option>
-            <option value=" Para llevar">⚡Para llevar /Moto Delivery</option>
+        <optgroup label="EXTERIOR / ENVÍO">
+            <option value="Vereda">Vereda</option>
+             <option value="Mesa 1">Mesa 01</option>
+            <option value="Mesa 2">Mesa 02</option>
+            <option value="Mesa 3">Mesa 03</option>
+            <option value="Mesa 4">Mesa 04</option>
+            <option value="Mesa 5">Mesa 05</option>
+            <option value="Para llevar">🛍️ Para llevar</option>
+            <option value="Delivery">🛵 Moto Delivery</option>
         </optgroup>
     </select>
-    <br>
     
     <button onclick="iniciarApp()" style="padding:16px 50px; background:var(--primary); color:white; border:none; font-weight:bold; border-radius:12px; margin-top:15px; cursor:pointer;">INGRESAR AL MENÚ</button>
 </div>
 
 <div id="app" class="app-container">
-    <div class="header">
-        <h2 style="margin:0">Nuestro Menú</h2>
-        <p style="font-size: 0.9em; color: var(--primary); margin-top: 5px;">Toque los productos que desee pedir</p>
-    </div>
-
+    <div id="nav-categorias" class="category-nav"></div>
     <div id="lista-menu"></div>
 
     <button class="btn-whatsapp" onclick="enviarPedido()">
@@ -190,39 +172,54 @@
             baseDeDatos = filas.map(f => {
                 const c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 return {
+                    cat: c[1] ? c[1].replace(/"/g, "").trim().toUpperCase() : "OTROS", // GRUPO COL B
                     nombre: c[2] ? c[2].replace(/"/g, "").trim() : "",
                     desc: c[3] ? c[3].replace(/"/g, "").trim() : "",
-                    precio: c[4] ? parseFloat(c[4].trim()) : 0,
+                    precio: c[4] ? parseFloat(c[4].replace(/[^0-9.-]+/g,"")) : 0,
                     img: c[5] ? c[5].trim() : "",
                     disp: c[6] ? c[6].toUpperCase().trim() : "",
-                    wa: c[10] ? c[10].trim() : ""
+                    wa: c[10] ? c[10].trim() : "" // WHATSAPP COL K
                 };
-            }).filter(p => p.nombre !== "" && p.precio > 0); // FILTRO ANTI-ERRORES
+            }).filter(p => p.nombre !== "" && p.disp === "SI");
             
             renderizar();
-        } catch (e) { alert("Error de conexión. Intente recargar."); }
+        } catch (e) { console.error(e); }
     }
 
     function renderizar() {
         const cont = document.getElementById('lista-menu');
-        cont.innerHTML = "";
+        const nav = document.getElementById('nav-categorias');
+        cont.innerHTML = ""; nav.innerHTML = "";
         
-        baseDeDatos.filter(p => p.disp === "SI").forEach((p, index) => {
-            cont.innerHTML += `
-                <div class="producto-card" id="item-${index}" onclick="toggleSeleccion('${p.nombre}', ${p.precio}, ${index})">
-                    <div class="checkbox-custom"></div>
-                    <img src="${p.img}" class="producto-img" onerror="this.src='https://via.placeholder.com/150?text=S/F'">
-                    <div class="info">
-                        <strong>${p.nombre}</strong>
-                        <small>${p.desc}</small>
-                        <span class="precio">$${p.precio}</span>
-                    </div>
-                </div>`;
+        // Obtener categorías únicas
+        const categorias = [...new Set(baseDeDatos.map(p => p.cat))];
+        
+        categorias.forEach(cat => {
+            // Crear botones de navegación
+            nav.innerHTML += `<button class="cat-btn" onclick="document.getElementById('sec-${cat}').scrollIntoView({behavior:'smooth'})">${cat}</button>`;
+            
+            // Crear título de sección
+            cont.innerHTML += `<div id="sec-${cat}" class="section-title">${cat}</div>`;
+            
+            // Listar productos de esa categoría
+            baseDeDatos.filter(p => p.cat === cat).forEach((p, index) => {
+                const prodId = `item-${cat}-${index}`;
+                cont.innerHTML += `
+                    <div class="producto-card" id="${prodId}" onclick="toggleSeleccion('${p.nombre}', ${p.precio}, '${prodId}')">
+                        <div class="checkbox-custom"></div>
+                        <img src="${p.img}" class="producto-img" onerror="this.src='https://via.placeholder.com/150?text=S/F'">
+                        <div class="info">
+                            <strong>${p.nombre}</strong>
+                            <small>${p.desc}</small>
+                            <span class="precio">$${p.precio}</span>
+                        </div>
+                    </div>`;
+            });
         });
     }
 
-    function toggleSeleccion(nombre, precio, index) {
-        const element = document.getElementById(`item-${index}`);
+    function toggleSeleccion(nombre, precio, id) {
+        const element = document.getElementById(id);
         const pos = carrito.findIndex(i => i.nombre === nombre);
 
         if (pos > -1) {
@@ -253,8 +250,14 @@
         if (carrito.length === 0) return alert("El pedido está vacío.");
         
         const numWA = (baseDeDatos[0] && baseDeDatos[0].wa) ? baseDeDatos[0].wa : "54911XXXXXXXX";
+        
+        let emojiUbi = "🍽️";
+        if (mesaActual.includes("Vereda")) emojiUbi = "☀️";
+        if (mesaActual.includes("llevar")) emojiUbi = "🛍️";
+        if (mesaActual.includes("Delivery")) emojiUbi = "🛵";
+
+        let lista = `*NUEVO PEDIDO ${emojiUbi}*\n*UBICACIÓN:* ${mesaActual}\n------------------\n`;
         let total = 0;
-        let lista = `*NUEVO PEDIDO*\n*UBICACIÓN:* ${mesaActual}\n------------------\n`;
         
         carrito.forEach(i => { 
             lista += `• ${i.nombre} ($${i.precio})\n`; 
