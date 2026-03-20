@@ -3,146 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú IA - Matrix Edition</title>
+    <title>Catálogo Digital</title>
     <style>
-        :root { --matrix-green: #00ff41; --dark-bg: #050505; }
-        
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            margin: 0; 
-            background-color: var(--dark-bg); 
-            color: white; 
-            overflow-x: hidden;
+        :root {
+            --primary: #2ecc71;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
         }
 
-        #matrix-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            opacity: 0.25;
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            background: radial-gradient(circle at top, #1e293b, #0f172a);
+            background-attachment: fixed;
+            color: var(--text);
+            padding-bottom: 100px;
         }
 
-        #welcome-screen { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); z-index: 1000; display: flex; 
-            flex-direction: column; align-items: center; justify-content: center; 
-            text-align: center; padding: 20px;
+        /* Pantalla de Bienvenida */
+        #welcome-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 1000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        .ai-avatar { 
-            width: 150px; height: 150px; border-radius: 50%; 
-            border: 3px solid var(--matrix-green); margin-bottom: 20px; 
-            box-shadow: 0 0 20px var(--matrix-green);
+        .ai-avatar {
+            width: 120px; height: 120px; border-radius: 50%;
+            border: 3px solid var(--primary); margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(46, 204, 113, 0.3);
         }
 
+        /* Contenedor Principal */
         .app-container { max-width: 500px; margin: 0 auto; padding: 15px; display: none; }
-        
-        .header-ia { 
-            background: rgba(20, 20, 20, 0.85); 
-            padding: 15px; border-radius: 15px; 
-            border: 1px solid var(--matrix-green);
-            margin-bottom: 20px; 
+
+        .header {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 20px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 25px; text-align: center;
         }
 
-        .producto-card { 
-            background: rgba(30, 30, 30, 0.9); 
-            border-radius: 12px; margin-bottom: 15px; padding: 10px; 
-            display: flex; align-items: center; 
-            border-left: 4px solid var(--matrix-green);
+        /* Tarjeta de Producto con Checkbox */
+        .producto-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 15px; margin-bottom: 12px; padding: 12px;
+            display: flex; align-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        .producto-img { 
-            width: 80px; height: 80px; border-radius: 8px; 
-            object-fit: cover; margin-right: 15px; 
-            border: 1px solid #444;
+        .producto-card.selected {
+            border-color: var(--primary);
+            background: rgba(46, 204, 113, 0.1);
+        }
+
+        /* Checkbox Circular */
+        .checkbox-custom {
+            width: 24px; height: 24px; border: 2px solid #64748b;
+            border-radius: 50%; margin-right: 12px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .selected .checkbox-custom {
+            background: var(--primary); border-color: var(--primary);
+        }
+
+        .selected .checkbox-custom::after {
+            content: '✓'; color: white; font-size: 14px; font-weight: bold;
+        }
+
+        .producto-img {
+            width: 70px; height: 70px; border-radius: 12px;
+            object-fit: cover; margin-right: 15px;
         }
 
         .info { flex-grow: 1; }
-        .precio { color: var(--matrix-green); font-weight: bold; font-size: 1.2em; }
+        .info strong { display: block; font-size: 1.1em; margin-bottom: 4px; }
+        .info small { color: #94a3b8; display: block; line-height: 1.2; margin-bottom: 6px; }
+        .precio { color: var(--primary); font-weight: bold; font-size: 1.1em; }
 
-        .btn-add { 
-            background: var(--matrix-green); color: black; border: none; 
-            padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer;
-        }
-
-        .chat-input { 
-            width: 70%; padding: 10px; border-radius: 20px; border: 1px solid var(--matrix-green);
-            background: black; color: white;
-        }
-
-        .btn-whatsapp { 
+        /* Botón Flotante de WhatsApp */
+        .btn-whatsapp {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #25d366; color: white; border: none; padding: 15px 30px; 
-            border-radius: 30px; font-weight: bold; width: 85%; z-index: 99;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            background: var(--primary); color: white; border: none;
+            padding: 18px; border-radius: 50px; font-weight: bold;
+            width: 90%; max-width: 400px; z-index: 99;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            display: flex; justify-content: space-between; align-items: center;
         }
+
+        .badge-count {
+            background: white; color: var(--primary);
+            padding: 2px 10px; border-radius: 10px; font-size: 0.9em;
+        }
+
+        select, button { cursor: pointer; }
     </style>
 </head>
 <body>
 
-<canvas id="matrix-canvas"></canvas>
-
 <div id="welcome-screen">
-    <img src="https://raw.githubusercontent.com/cursosmenos20grados/catalogo/main/moza_robot.jpg?raw=true" class="ai-avatar">
-    <h1 style="color:var(--matrix-green)">SYSTEM ONLINE</h1>
-    <p>Seleccione su ubicación:</p>
-    <select id="mesa-selector" style="padding:10px; background:black; color:white; border:1px solid var(--matrix-green); width: 200px;">
+    <img src="https://raw.githubusercontent.com/cursosmenos20grados/catalogo/main/moza_robot.jpg" class="ai-avatar">
+    <h2 style="margin-bottom: 5px;">Bienvenido</h2>
+    <p style="color: #94a3b8; margin-bottom: 25px;">Seleccione su ubicación</p>
+    
+    <select id="mesa-selector" style="padding:12px; background:#1e293b; color:white; border:1px solid #334155; width: 220px; border-radius: 10px;">
         <option value="">-- Ubicación --</option>
-        <optgroup label="SALÓN PRINCIPAL">
-            <option value="Mesa 1">Mesa 01</option>
-            <option value="Mesa 2">Mesa 02</option>
-            <option value="Mesa 3">Mesa 03</option>
-            <option value="Barra">Barra Central</option>
-        </optgroup>
-        <optgroup label="EXTERIOR">
-            <option value="Vereda 1">Vereda 01</option>
-            <option value="Vereda 2">Vereda 02</option>
-        </optgroup>
-    </select><br><br>
-    <button onclick="iniciarApp()" style="padding:15px 30px; background:var(--matrix-green); border:none; font-weight:bold; border-radius:5px; cursor:pointer;">CONECTAR</button>
+        <option value="Mesa 1">Mesa 01</option>
+        <option value="Mesa 2">Mesa 02</option>
+        <option value="Barra">Barra</option>
+        <option value="Para llevar">Para llevar</option>
+    </select><br>
+    
+    <button onclick="iniciarApp()" style="padding:15px 40px; background:var(--primary); color:white; border:none; font-weight:bold; border-radius:12px; margin-top:10px;">INGRESAR</button>
 </div>
 
 <div id="app" class="app-container">
-    <div class="header-ia">
-        <small style="color:var(--matrix-green)">[PROTOCOLO DE ASISTENCIA ACTIVO]</small>
-        <p id="moza-txt">¿Qué desea solicitar al sistema hoy?</p>
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="user-ask" class="chat-input" placeholder="Consultar IA...">
-            <button onclick="consultarIA()" class="btn-add">ASK</button>
-        </div>
+    <div class="header">
+        <h3 style="margin:0">Nuestro Menú</h3>
+        <p style="font-size: 0.8em; color: var(--primary); margin: 5px 0 0 0;">Seleccione los productos para su pedido</p>
     </div>
 
     <div id="lista-menu"></div>
-    <div style="height: 100px;"></div>
-    <button class="btn-whatsapp" onclick="enviarPedido()">ENVIAR PEDIDO POR WHATSAPP</button>
+
+    <button class="btn-whatsapp" onclick="enviarPedido()">
+        <span>ENVIAR PEDIDO</span>
+        <span class="badge-count" id="cart-count">0</span>
+    </button>
 </div>
+
 <script>
-    // --- EFECTO MATRIX ---
-    const canvas = document.getElementById('matrix-canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const letters = "01010101010101010101010101010101010101";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
-
-    function drawMatrix() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#00ff41";
-        ctx.font = fontSize + "px monospace";
-        for (let i = 0; i < drops.length; i++) {
-            const text = letters.charAt(Math.floor(Math.random() * letters.length));
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-            drops[i]++;
-        }
-    }
-    setInterval(drawMatrix, 50);
-
-    // --- LÓGICA DE CARGA (CORREGIDA PARA TU LINK) ---
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRbg-JdC7bjpgQH1vwdq1m8Or_FTyZXG56lI152bs-_rjFp8yCNYnujB8CCkO_gFkmvEfczJ9uMaXzK/pub?output=csv';
     
     let baseDeDatos = [];
@@ -153,91 +148,76 @@
         try {
             const res = await fetch(CSV_URL);
             const data = await res.text();
-            
-            // Esta función separa las filas respetando las comas dentro de las comillas
             const filas = data.replace(/\r/g, "").split('\n').slice(1);
             
             baseDeDatos = filas.map(f => {
-                // Expresión regular para separar por comas pero ignorar las comas dentro de frases
                 const c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 return {
-                    id: c[0],
-                    cat: c[1],
                     nombre: c[2] ? c[2].replace(/"/g, "") : "",
                     desc: c[3] ? c[3].replace(/"/g, "") : "",
-                    precio: c[4],
+                    precio: c[4] ? c[4].trim() : "0",
                     img: c[5] ? c[5].trim() : "",
                     disp: c[6] ? c[6].toUpperCase().trim() : "",
-                    dest: c[7] ? c[7].toUpperCase().trim() : "",
-                    suger: c[8],
                     wa: c[10] ? c[10].trim() : ""
                 };
             });
             renderizar();
-        } catch (e) { console.error("Error:", e); }
+        } catch (e) { console.error(e); }
     }
 
     function renderizar() {
         const cont = document.getElementById('lista-menu');
         cont.innerHTML = "";
         
-        // Filtramos buscando el "SI" sin importar espacios
-        const productosVisibles = baseDeDatos.filter(p => p.disp.includes("SI"));
-        
-        if (productosVisibles.length === 0) {
-            cont.innerHTML = "<p style='text-align:center; color:orange; padding:20px;'>[SISTEMA]: Conexión establecida. No hay productos disponibles en el Buffer.</p>";
-            return;
-        }
-
-        productosVisibles.forEach(p => {
+        baseDeDatos.filter(p => p.disp.includes("SI")).forEach((p, index) => {
             cont.innerHTML += `
-                <div class="producto-card">
-                    <img src="${p.img}" class="producto-img" onerror="this.src='https://via.placeholder.com/150?text=SIN+FOTO'">
+                <div class="producto-card" id="item-${index}" onclick="toggleSeleccion('${p.nombre}', ${p.precio}, ${index})">
+                    <div class="checkbox-custom"></div>
+                    <img src="${p.img}" class="producto-img" onerror="this.src='https://via.placeholder.com/150?text=Comida'">
                     <div class="info">
-                        <strong>${p.nombre}</strong><br>
-                        <small style="color:#aaa">${p.desc}</small><br>
+                        <strong>${p.nombre}</strong>
+                        <small>${p.desc}</small>
                         <span class="precio">$${p.precio}</span>
                     </div>
-                    <button class="btn-add" onclick="agregar('${p.nombre}', ${p.precio})">+</button>
                 </div>`;
         });
     }
 
+    function toggleSeleccion(nombre, precio, index) {
+        const element = document.getElementById(`item-${index}`);
+        const pos = carrito.findIndex(i => i.nombre === nombre);
+
+        if (pos > -1) {
+            carrito.splice(pos, 1);
+            element.classList.remove('selected');
+        } else {
+            carrito.push({nombre, precio});
+            element.classList.add('selected');
+        }
+        document.getElementById('cart-count').innerText = carrito.length;
+    }
+
     function iniciarApp() {
         mesaActual = document.getElementById('mesa-selector').value;
-        if(!mesaActual) return alert("Seleccione su ubicación");
+        if(!mesaActual) return alert("Por favor, selecciona tu mesa");
         document.getElementById('welcome-screen').style.display = 'none';
         document.getElementById('app').style.display = 'block';
         cargarDatos();
     }
 
-    function agregar(n, p) {
-        carrito.push({nombre:n, precio:p});
-        document.getElementById('moza-txt').innerText = `Agregado: ${n}. ¿Algo más?`;
-    }
-
-    function consultarIA() {
-        const q = document.getElementById('user-ask').value.toLowerCase();
-        const txt = document.getElementById('moza-txt');
-        if(q.includes("comer") || q.includes("recomienda")) {
-            const sug = baseDeDatos.find(p => p.dest.includes("SI"));
-            txt.innerText = sug ? sug.suger : "Te recomiendo nuestras especialidades del día.";
-        } else {
-            txt.innerText = "Protocolo activo. Seleccione componentes del menú.";
-        }
-    }
-
     function enviarPedido() {
-        if (carrito.length === 0) return alert("El pedido está vacío.");
-        // Busca el número en la primera fila (columna K)
+        if (carrito.length === 0) return alert("Selecciona al menos un producto.");
+        
         const numWA = (baseDeDatos[0] && baseDeDatos[0].wa) ? baseDeDatos[0].wa : "54911XXXXXXXX";
         let total = 0;
-        let lista = `*NUEVO PEDIDO - SISTEMA IA*\n*UBICACIÓN:* ${mesaActual}\n\n`;
+        let lista = `*NUEVO PEDIDO*\n*UBICACIÓN:* ${mesaActual}\n-------------\n`;
+        
         carrito.forEach(i => { 
-            lista += `> ${i.nombre} ($${i.precio})\n`; 
+            lista += `• ${i.nombre} ($${i.precio})\n`; 
             total += parseFloat(i.precio); 
         });
-        lista += `\n*TOTAL:* $${total.toFixed(2)}`;
+        
+        lista += `-------------\n*TOTAL: $${total.toFixed(2)}*`;
         window.open(`https://wa.me/${numWA}?text=${encodeURIComponent(lista)}`, '_blank');
     }
 </script>
