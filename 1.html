@@ -18,10 +18,9 @@
             background: radial-gradient(circle at top, #1e293b, #0f172a);
             background-attachment: fixed;
             color: var(--text);
-            padding-bottom: 100px;
+            padding-bottom: 110px;
         }
 
-        /* Pantalla de Bienvenida */
         #welcome-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg); z-index: 1000;
@@ -34,7 +33,6 @@
             box-shadow: 0 0 30px rgba(46, 204, 113, 0.3);
         }
 
-        /* Contenedor Principal */
         .app-container { max-width: 500px; margin: 0 auto; padding: 15px; display: none; }
 
         .header {
@@ -45,7 +43,6 @@
             margin-bottom: 25px; text-align: center;
         }
 
-        /* Tarjeta de Producto con Checkbox */
         .producto-card {
             background: var(--card-bg);
             backdrop-filter: blur(8px);
@@ -58,15 +55,15 @@
 
         .producto-card.selected {
             border-color: var(--primary);
-            background: rgba(46, 204, 113, 0.1);
+            background: rgba(46, 204, 113, 0.15);
+            transform: scale(1.02);
         }
 
-        /* Checkbox Circular */
         .checkbox-custom {
-            width: 24px; height: 24px; border: 2px solid #64748b;
+            width: 26px; height: 26px; border: 2px solid #64748b;
             border-radius: 50%; margin-right: 12px;
             display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
+            flex-shrink: 0;
         }
 
         .selected .checkbox-custom {
@@ -74,66 +71,67 @@
         }
 
         .selected .checkbox-custom::after {
-            content: '✓'; color: white; font-size: 14px; font-weight: bold;
+            content: '✓'; color: white; font-size: 16px; font-weight: bold;
         }
 
         .producto-img {
-            width: 70px; height: 70px; border-radius: 12px;
+            width: 75px; height: 75px; border-radius: 12px;
             object-fit: cover; margin-right: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         .info { flex-grow: 1; }
-        .info strong { display: block; font-size: 1.1em; margin-bottom: 4px; }
-        .info small { color: #94a3b8; display: block; line-height: 1.2; margin-bottom: 6px; }
-        .precio { color: var(--primary); font-weight: bold; font-size: 1.1em; }
+        .info strong { display: block; font-size: 1.1em; }
+        .info small { color: #94a3b8; display: block; font-size: 0.85em; margin: 4px 0; }
+        .precio { color: var(--primary); font-weight: bold; font-size: 1.2em; }
 
-        /* Botón Flotante de WhatsApp */
         .btn-whatsapp {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: var(--primary); color: white; border: none;
-            padding: 18px; border-radius: 50px; font-weight: bold;
-            width: 90%; max-width: 400px; z-index: 99;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            padding: 15px 25px; border-radius: 50px; font-weight: bold;
+            width: 90%; max-width: 420px; z-index: 99;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             display: flex; justify-content: space-between; align-items: center;
+            font-size: 1.1em;
         }
 
-        .badge-count {
-            background: white; color: var(--primary);
-            padding: 2px 10px; border-radius: 10px; font-size: 0.9em;
+        .badge-info {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px; border-radius: 20px; font-size: 0.8em;
         }
-
-        select, button { cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="welcome-screen">
     <img src="https://raw.githubusercontent.com/cursosmenos20grados/catalogo/main/moza_robot.jpg" class="ai-avatar">
-    <h2 style="margin-bottom: 5px;">Bienvenido</h2>
-    <p style="color: #94a3b8; margin-bottom: 25px;">Seleccione su ubicación</p>
+    <h2>Catálogo Digital</h2>
+    <p style="color: #94a3b8; margin-bottom: 25px;">Seleccione su ubicación para comenzar</p>
     
-    <select id="mesa-selector" style="padding:12px; background:#1e293b; color:white; border:1px solid #334155; width: 220px; border-radius: 10px;">
-        <option value="">-- Ubicación --</option>
-        <option value="Mesa 1">Mesa 01</option>
-        <option value="Mesa 2">Mesa 02</option>
-        <option value="Barra">Barra</option>
-        <option value="Para llevar">Para llevar</option>
+    <select id="mesa-selector" style="padding:14px; background:#1e293b; color:white; border:1px solid #444; width: 240px; border-radius: 12px; font-size: 1em;">
+        <option value="">-- ¿Dónde se encuentra? --</option>
+        <option value="Mesa 01">Mesa 01</option>
+        <option value="Mesa 02">Mesa 02</option>
+        <option value="Barra Principal">Barra Principal</option>
+        <option value="Take Away">Para Llevar</option>
     </select><br>
     
-    <button onclick="iniciarApp()" style="padding:15px 40px; background:var(--primary); color:white; border:none; font-weight:bold; border-radius:12px; margin-top:10px;">INGRESAR</button>
+    <button onclick="iniciarApp()" style="padding:16px 50px; background:var(--primary); color:white; border:none; font-weight:bold; border-radius:12px; margin-top:15px; cursor:pointer;">INGRESAR AL MENÚ</button>
 </div>
 
 <div id="app" class="app-container">
     <div class="header">
-        <h3 style="margin:0">Nuestro Menú</h3>
-        <p style="font-size: 0.8em; color: var(--primary); margin: 5px 0 0 0;">Seleccione los productos para su pedido</p>
+        <h2 style="margin:0">Nuestro Menú</h2>
+        <p style="font-size: 0.9em; color: var(--primary); margin-top: 5px;">Toque los productos que desee pedir</p>
     </div>
 
     <div id="lista-menu"></div>
 
     <button class="btn-whatsapp" onclick="enviarPedido()">
         <span>ENVIAR PEDIDO</span>
-        <span class="badge-count" id="cart-count">0</span>
+        <div class="badge-info">
+            <span id="cart-count">0</span> ítems | <span id="cart-total">$0</span>
+        </div>
     </button>
 </div>
 
@@ -153,27 +151,28 @@
             baseDeDatos = filas.map(f => {
                 const c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 return {
-                    nombre: c[2] ? c[2].replace(/"/g, "") : "",
-                    desc: c[3] ? c[3].replace(/"/g, "") : "",
-                    precio: c[4] ? c[4].trim() : "0",
+                    nombre: c[2] ? c[2].replace(/"/g, "").trim() : "",
+                    desc: c[3] ? c[3].replace(/"/g, "").trim() : "",
+                    precio: c[4] ? parseFloat(c[4].trim()) : 0,
                     img: c[5] ? c[5].trim() : "",
                     disp: c[6] ? c[6].toUpperCase().trim() : "",
                     wa: c[10] ? c[10].trim() : ""
                 };
-            });
+            }).filter(p => p.nombre !== "" && p.precio > 0); // FILTRO ANTI-ERRORES
+            
             renderizar();
-        } catch (e) { console.error(e); }
+        } catch (e) { alert("Error de conexión. Intente recargar."); }
     }
 
     function renderizar() {
         const cont = document.getElementById('lista-menu');
         cont.innerHTML = "";
         
-        baseDeDatos.filter(p => p.disp.includes("SI")).forEach((p, index) => {
+        baseDeDatos.filter(p => p.disp === "SI").forEach((p, index) => {
             cont.innerHTML += `
                 <div class="producto-card" id="item-${index}" onclick="toggleSeleccion('${p.nombre}', ${p.precio}, ${index})">
                     <div class="checkbox-custom"></div>
-                    <img src="${p.img}" class="producto-img" onerror="this.src='https://via.placeholder.com/150?text=Comida'">
+                    <img src="${p.img}" class="producto-img" onerror="this.src='https://via.placeholder.com/150?text=S/F'">
                     <div class="info">
                         <strong>${p.nombre}</strong>
                         <small>${p.desc}</small>
@@ -194,30 +193,36 @@
             carrito.push({nombre, precio});
             element.classList.add('selected');
         }
+        actualizarBadge();
+    }
+
+    function actualizarBadge() {
+        const total = carrito.reduce((sum, item) => sum + item.precio, 0);
         document.getElementById('cart-count').innerText = carrito.length;
+        document.getElementById('cart-total').innerText = `$${total.toFixed(0)}`;
     }
 
     function iniciarApp() {
         mesaActual = document.getElementById('mesa-selector').value;
-        if(!mesaActual) return alert("Por favor, selecciona tu mesa");
+        if(!mesaActual) return alert("Por favor, indica tu ubicación.");
         document.getElementById('welcome-screen').style.display = 'none';
         document.getElementById('app').style.display = 'block';
         cargarDatos();
     }
 
     function enviarPedido() {
-        if (carrito.length === 0) return alert("Selecciona al menos un producto.");
+        if (carrito.length === 0) return alert("El pedido está vacío.");
         
         const numWA = (baseDeDatos[0] && baseDeDatos[0].wa) ? baseDeDatos[0].wa : "54911XXXXXXXX";
         let total = 0;
-        let lista = `*NUEVO PEDIDO*\n*UBICACIÓN:* ${mesaActual}\n-------------\n`;
+        let lista = `*NUEVO PEDIDO*\n*UBICACIÓN:* ${mesaActual}\n------------------\n`;
         
         carrito.forEach(i => { 
             lista += `• ${i.nombre} ($${i.precio})\n`; 
-            total += parseFloat(i.precio); 
+            total += i.precio; 
         });
         
-        lista += `-------------\n*TOTAL: $${total.toFixed(2)}*`;
+        lista += `------------------\n*TOTAL: $${total.toFixed(2)}*`;
         window.open(`https://wa.me/${numWA}?text=${encodeURIComponent(lista)}`, '_blank');
     }
 </script>
