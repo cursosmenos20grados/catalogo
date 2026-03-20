@@ -108,13 +108,35 @@
     <h2>Catálogo Digital</h2>
     <p style="color: #94a3b8; margin-bottom: 25px;">Seleccione su ubicación para comenzar</p>
     
-    <select id="mesa-selector" style="padding:14px; background:#1e293b; color:white; border:1px solid #444; width: 240px; border-radius: 12px; font-size: 1em;">
+    <select id="mesa-selector" style="padding:14px; background:#1e293b; color:white; border:1px solid #444; width: 260px; border-radius: 12px; font-size: 1em;">
         <option value="">-- ¿Dónde se encuentra? --</option>
-        <option value="Mesa 01">Mesa 01</option>
-        <option value="Mesa 02">Mesa 02</option>
-        <option value="Barra Principal">Barra Principal</option>
-        <option value="Take Away">Para Llevar</option>
-    </select><br>
+        <optgroup label="SALÓN PRINCIPAL">
+            <option value="Mesa 1">Mesa 01</option>
+            <option value="Mesa 2">Mesa 02</option>
+            <option value="Mesa 3">Mesa 03</option>
+            <option value="Mesa 4">Mesa 04</option>
+            <option value="Mesa 5">Mesa 05</option>
+             <option value="Mesa 6">Mesa 06</option>
+            <option value="Mesa 7">Mesa 07</option>
+            <option value="Mesa 8">Mesa 08</option>
+            <option value="Mesa 9">Mesa 09</option>
+            <option value="Mesa 10">Mesa 010</option>
+            <option value="Barra">Barra Central</option>
+        </optgroup>
+        <optgroup label="EXTERIOR">
+            <option value="Vereda 1">Vereda 01</option>
+            <option value="Vereda 2">Vereda 02</option>
+            <option value="Vereda 3">Vereda 03</option>
+             <option value="Vereda 4">Vereda 04</option>
+             <option value="Vereda 5">Vereda 05</option>
+             <option value="Vereda 6">Vereda 06</option>
+             <option value="Vereda 7">Vereda 07</option>
+             <option value="Vereda 8">Vereda 08</option>
+             <option value="Vereda 9">Vereda 09</option>
+            <option value=" Para llevar">⚡Para llevar /Moto Delivery</option>
+        </optgroup>
+    </select>
+    <br>
     
     <button onclick="iniciarApp()" style="padding:16px 50px; background:var(--primary); color:white; border:none; font-weight:bold; border-radius:12px; margin-top:15px; cursor:pointer;">INGRESAR AL MENÚ</button>
 </div>
