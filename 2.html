@@ -2,148 +2,138 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú Helados.mix</title>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Menú Digital Inteligente por QR</title>
+<meta name="description" content="Hacé tu pedido online en Restaurante a un clic de distancia.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="🍽️ Menú Online">
+<meta property="og:description" content="Elegí tus menú favorito y enviá tu pedido por WhatsApp de forma fácil y rápida.">
+<meta property="og:url" content="https://cursosmenos20grados.github.io/catalogo/1.html">
+<meta property="og:image" content="https://raw.githubusercontent.com/cursosmenos20grados/catalogo/main/moza_robot.jpg"
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Catalogo">
+<link rel="icon" href="https://github.com/cursosmenos20grados/catalogo/blob/main/moza_robot.jpg?raw=true">
+<link rel="apple-touch-icon" href="https://github.com/cursosmenos20grados/catalogo/blob/main/moza_robot.jpg?raw=true">
+   
+    <title>Panel Admin | Helados.mix</title>
     <style>
-        :root { --primary: #2ecc71; --bg: #0f172a; --card-bg: rgba(30, 41, 59, 0.7); --text: #f8fafc; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: radial-gradient(circle at top, #1e293b, #0f172a); background-attachment: fixed; color: var(--text); padding-bottom: 120px; scroll-behavior: smooth; }
-        
-        /* Contenedor de Categorías Flotante */
-        .category-nav {
-            display: flex; gap: 10px; overflow-x: auto; padding: 15px;
-            position: sticky; top: 0; background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.1);
-            scrollbar-width: none;
-        }
-        .category-nav::-webkit-scrollbar { display: none; }
-        
-        .cat-btn {
-            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1);
-            color: white; padding: 8px 18px; border-radius: 20px;
-            white-space: nowrap; font-size: 0.85em; cursor: pointer;
-        }
-        .cat-btn:active { background: var(--primary); }
-
-        .section-title { 
-            padding: 20px 15px 10px; color: var(--primary); 
-            text-transform: uppercase; letter-spacing: 1px; font-size: 0.9em;
-        }
-
-        /* Estilos de tarjeta (los mismos que ya tenías) */
-        .app-container { max-width: 500px; margin: 0 auto; }
-        .producto-card {
-            background: var(--card-bg); border-radius: 15px; margin: 0 15px 12px; 
-            padding: 12px; display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .producto-card.selected { border-color: var(--primary); background: rgba(46, 204, 113, 0.15); }
-        .checkbox-custom { width: 26px; height: 26px; border: 2px solid #64748b; border-radius: 50%; margin-right: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .selected .checkbox-custom { background: var(--primary); border-color: var(--primary); }
-        .selected .checkbox-custom::after { content: '✓'; color: white; font-size: 16px; font-weight: bold; }
-        .producto-img { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; margin-right: 15px; }
-        .info { flex-grow: 1; }
-        .precio { color: var(--primary); font-weight: bold; font-size: 1.1em; }
-        
-        .btn-whatsapp { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; border: none; padding: 15px 25px; border-radius: 50px; font-weight: bold; width: 90%; max-width: 420px; z-index: 99; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        body { font-family: sans-serif; background: #0f172a; color: white; padding: 20px; }
+        .card { background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 5px solid #2ecc71; }
+        .no-stock { border-left-color: #e74c3c; opacity: 0.6; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-edit { background: #3498db; color: white; padding: 10px; border-radius: 8px; text-decoration: none; font-size: 0.8em; }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: #334155; padding: 15px; border-radius: 10px; text-align: center; }
+        .precio { color: #2ecc71; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div id="welcome-screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-    <img src="https://github.com/cursosmenos20grados/catalogo/blob/main/moza_robot.jpg?raw=true" style="width:120px; border-radius:50%; border:3px solid var(--primary); margin-bottom:20px;">
-    <h2>Helados.mix</h2>
-    <select id="mesa-selector" style="padding:14px; background:#1e293b; color:white; border-radius:12px; width:260px; margin-bottom:15px;">
-        <option value="">-- ¿Dónde se encuentra? --</option>
-        <optgroup label="SALÓN"><option value="Mesa 1">Mesa 01</option><option value="Mesa 2">Mesa 02</option></optgroup>
-        <optgroup label="OTROS"><option value="Para llevar">🛍️ Para llevar</option></optgroup>
-    </select>
-    <button onclick="iniciarApp()" style="padding:15px 50px; background:var(--primary); color:white; border:none; border-radius:12px; font-weight:bold;">INGRESAR</button>
+<div class="header">
+    <h2>Control Cafeteria</h2>
+    <a href="https://docs.google.com/spreadsheets/d/19C3LcmEyUhJ-feULW6wa-vgGkXbmJAsCP84cYnK_5ZU/edit" target="_blank" class="btn-edit">📝 EDITAR EXCEL</a>
 </div>
 
-<div id="app" class="app-container" style="display:none;">
-    <div id="nav-categorias" class="category-nav"></div>
-    <div id="lista-menu"></div>
-    <button class="btn-whatsapp" onclick="enviarPedido()">
-        <span>ENVIAR PEDIDO</span>
-        <div style="font-size:0.8em;"><span id="cart-count">0</span> ítems | <span id="cart-total">$0</span></div>
-    </button>
+<div class="stats">
+    <div class="stat-box">
+        <small>Productos Activos</small>
+        <h3 id="count-active">0</h3>
+    </div>
+    <div class="stat-box">
+        <small>Sin Stock</small>
+        <h3 id="count-inactive" style="color:#e74c3c">0</h3>
+    </div>
 </div>
 
+<div id="admin-lista">Cargando inventario...</div>
+<div style="
+    text-align: center; 
+    margin: 30px auto; 
+    padding: 25px; 
+    background: rgba(30, 41, 59, 0.5); 
+    border-radius: 20px; 
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    max-width: 300px;
+    backdrop-filter: blur(10px);
+">
+    <p style="color: #94a3b8; font-size: 0.9em; margin-bottom: 15px; font-weight: bold;">
+        📲 TU CÓDIGO QR OFICIAL
+    </p>
+    
+    <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block;">
+        <img src="https://github.com/cursosmenos20grados/catalogo/blob/main/qr-code.jpg?raw=true" 
+             alt="QR Helados.mix" 
+             style="width: 200px; height: 200px; display: block; border-radius: 5px;">
+    </div>
+
+    <p style="color: #2ecc71; font-size: 0.75em; margin-top: 15px; word-break: break-all; opacity: 0.8;">
+        https://cursosmenos20grados.github.io/catalogo/1.html
+    </p>
+    
+    <a href="https://github.com/cursosmenos20grados/catalogo/blob/main/qr-code.jpg?raw=true" 
+       download="QR-HeladosMix.jpg" 
+       style="
+            display: inline-block; 
+            margin-top: 10px; 
+            padding: 8px 15px; 
+            background: #2ecc71; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            font-size: 0.8em; 
+            font-weight: bold;
+       ">
+       📥 DESCARGAR QR
+    </a>
+</div>
 <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRbg-JdC7bjpgQH1vwdq1m8Or_FTyZXG56lI152bs-_rjFp8yCNYnujB8CCkO_gFkmvEfczJ9uMaXzK/pub?output=csv';
-    let baseDeDatos = []; let carrito = []; let mesaActual = "";
 
-    async function cargarDatos() {
+    async function cargarAdmin() {
         const res = await fetch(CSV_URL);
         const data = await res.text();
         const filas = data.replace(/\r/g, "").split('\n').slice(1);
         
-        baseDeDatos = filas.map(f => {
+        const productos = filas.map(f => {
             const c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             return {
-                cat: c[1] ? c[1].replace(/"/g, "").trim() : "OTROS", // Columna B
-                nombre: c[2] ? c[2].replace(/"/g, "").trim() : "",
-                desc: c[3] ? c[3].replace(/"/g, "").trim() : "",
-                precio: c[4] ? parseFloat(c[4]) : 0,
-                img: c[5] ? c[5].trim() : "",
-                disp: c[6] ? c[6].toUpperCase().trim() : ""
+                nombre: c[2] ? c[2].replace(/"/g, "") : "Sin nombre",
+                precio: c[4] || "0",
+                disp: c[6] ? c[6].toUpperCase().trim() : "NO"
             };
-        }).filter(p => p.nombre !== "" && p.disp === "SI");
-        renderizar();
-    }
+        }).filter(p => p.nombre !== "Sin nombre");
 
-    function renderizar() {
-        const cont = document.getElementById('lista-menu');
-        const nav = document.getElementById('nav-categorias');
-        cont.innerHTML = ""; nav.innerHTML = "";
+        const cont = document.getElementById('admin-lista');
+        cont.innerHTML = "";
         
-        const categorias = [...new Set(baseDeDatos.map(p => p.cat))];
-        
-        categorias.forEach(cat => {
-            // Crear botón de navegación
-            nav.innerHTML += `<button class="cat-btn" onclick="document.getElementById('sec-${cat}').scrollIntoView()">${cat}</button>`;
-            
-            // Crear sección
-            cont.innerHTML += `<div id="sec-${cat}" class="section-title">${cat}</div>`;
-            
-            baseDeDatos.filter(p => p.cat === cat).forEach((p, index) => {
-                cont.innerHTML += `
-                    <div class="producto-card" onclick="toggleSeleccion('${p.nombre}', ${p.precio}, this)">
-                        <div class="checkbox-custom"></div>
-                        <img src="${p.img}" class="producto-img" onerror="this.src='https://via.placeholder.com/150?text=Helados.mix'">
-                        <div class="info">
-                            <strong>${p.nombre}</strong><small>${p.desc}</small>
-                            <span class="precio">$${p.precio}</span>
-                        </div>
-                    </div>`;
-            });
+        let activos = 0;
+        let inactivos = 0;
+
+        productos.forEach(p => {
+            const esActivo = p.disp.includes("SI");
+            if(esActivo) activos++; else inactivos++;
+
+            cont.innerHTML += `
+                <div class="card ${esActivo ? '' : 'no-stock'}">
+                    <strong>${p.nombre}</strong><br>
+                    <span class="precio">$${p.precio}</span> | 
+                    <span>${esActivo ? '✅ EN VENTA' : '❌ PAUSADO'}</span>
+                </div>`;
         });
+
+        document.getElementById('count-active').innerText = activos;
+        document.getElementById('count-inactive').innerText = inactivos;
     }
 
-    function toggleSeleccion(nombre, precio, element) {
-        const pos = carrito.findIndex(i => i.nombre === nombre);
-        if (pos > -1) { carrito.splice(pos, 1); element.classList.remove('selected'); }
-        else { carrito.push({nombre, precio}); element.classList.add('selected'); }
-        document.getElementById('cart-count').innerText = carrito.length;
-        const total = carrito.reduce((s, i) => s + i.precio, 0);
-        document.getElementById('cart-total').innerText = `$${total.toFixed(0)}`;
-    }
-
-    function iniciarApp() {
-        mesaActual = document.getElementById('mesa-selector').value;
-        if(!mesaActual) return alert("Selecciona tu ubicación");
-        document.getElementById('welcome-screen').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        cargarDatos();
-    }
-
-    function enviarPedido() {
-        if (carrito.length === 0) return alert("Pedido vacío");
-        let lista = `*NUEVO PEDIDO*\n*UBICACIÓN:* ${mesaActual}\n-------------\n`;
-        let total = 0;
-        carrito.forEach(i => { lista += `• ${i.nombre} ($${i.precio})\n`; total += i.precio; });
-        lista += `-------------\n*TOTAL: $${total.toFixed(2)}*`;
-        window.open(`https://wa.me/54911XXXXXXXX?text=${encodeURIComponent(lista)}`, '_blank');
-    }
+    cargarAdmin();
 </script>
 </body>
 </html>
