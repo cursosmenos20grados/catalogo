@@ -117,8 +117,8 @@
     <div style="height: 100px;"></div>
     <button class="btn-whatsapp" onclick="enviarPedido()">ENVIAR PEDIDO POR WHATSAPP</button>
 </div>
-
 <script>
+    // --- EFECTO MATRIX ---
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -142,8 +142,9 @@
     }
     setInterval(drawMatrix, 50);
 
-    const SHEET_ID = '1vRbg-JdC7bjpgQH1vwdq1m8Or_FTyZXG56lI152bs-_rjFp8yCNYnujB8CCkO_gFkmvEfczJ9uMaXzK';
-    const CSV_URL = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?gid=0&single=true&output=csv`;
+    // --- LÓGICA DE CARGA (CORREGIDA PARA TU LINK) ---
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRbg-JdC7bjpgQH1vwdq1m8Or_FTyZXG56lI152bs-_rjFp8yCNYnujB8CCkO_gFkmvEfczJ9uMaXzK/pub?output=csv';
+    
     let baseDeDatos = [];
     let carrito = [];
     let mesaActual = "";
@@ -152,37 +153,46 @@
         try {
             const res = await fetch(CSV_URL);
             const data = await res.text();
-            // Limpieza de caracteres de retorno de carro (\r) que ensucian los datos
+            
+            // Esta función separa las filas respetando las comas dentro de las comillas
             const filas = data.replace(/\r/g, "").split('\n').slice(1);
             
             baseDeDatos = filas.map(f => {
-                const c = f.split(',');
+                // Expresión regular para separar por comas pero ignorar las comas dentro de frases
+                const c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 return {
-                    id: c[0], cat: c[1], nombre: c[2], desc: c[3], precio: c[4], 
-                    img: c[5], disp: c[6] ? c[6].toUpperCase().trim() : "", 
-                    dest: c[7] ? c[7].toUpperCase().trim() : "", 
-                    suger: c[8], tags: c[9], wa: c[10]
+                    id: c[0],
+                    cat: c[1],
+                    nombre: c[2] ? c[2].replace(/"/g, "") : "",
+                    desc: c[3] ? c[3].replace(/"/g, "") : "",
+                    precio: c[4],
+                    img: c[5] ? c[5].trim() : "",
+                    disp: c[6] ? c[6].toUpperCase().trim() : "",
+                    dest: c[7] ? c[7].toUpperCase().trim() : "",
+                    suger: c[8],
+                    wa: c[10] ? c[10].trim() : ""
                 };
             });
-            console.log("Datos cargados:", baseDeDatos); // Para revisar en consola F12
             renderizar();
-        } catch (e) { alert("Error cargando base de datos."); }
+        } catch (e) { console.error("Error:", e); }
     }
 
     function renderizar() {
         const cont = document.getElementById('lista-menu');
         cont.innerHTML = "";
-        const productosVisibles = baseDeDatos.filter(p => p.disp === "SI");
+        
+        // Filtramos buscando el "SI" sin importar espacios
+        const productosVisibles = baseDeDatos.filter(p => p.disp.includes("SI"));
         
         if (productosVisibles.length === 0) {
-            cont.innerHTML = "<p style='text-align:center; color:orange;'>[SISTEMA]: No se encontraron productos marcados como 'SI' en la columna Disponible.</p>";
+            cont.innerHTML = "<p style='text-align:center; color:orange; padding:20px;'>[SISTEMA]: Conexión establecida. No hay productos disponibles en el Buffer.</p>";
             return;
         }
 
         productosVisibles.forEach(p => {
             cont.innerHTML += `
                 <div class="producto-card">
-                    <img src="${p.img ? p.img.trim() : ''}" class="producto-img" onerror="this.src='https://via.placeholder.com/150?text=SIN+FOTO'">
+                    <img src="${p.img}" class="producto-img" onerror="this.src='https://via.placeholder.com/150?text=SIN+FOTO'">
                     <div class="info">
                         <strong>${p.nombre}</strong><br>
                         <small style="color:#aaa">${p.desc}</small><br>
@@ -210,16 +220,17 @@
         const q = document.getElementById('user-ask').value.toLowerCase();
         const txt = document.getElementById('moza-txt');
         if(q.includes("comer") || q.includes("recomienda")) {
-            const sug = baseDeDatos.find(p => p.dest === "SI");
+            const sug = baseDeDatos.find(p => p.dest.includes("SI"));
             txt.innerText = sug ? sug.suger : "Te recomiendo nuestras especialidades del día.";
         } else {
-            txt.innerText = "Buscando en protocolos... revisa nuestras opciones destacadas.";
+            txt.innerText = "Protocolo activo. Seleccione componentes del menú.";
         }
     }
 
     function enviarPedido() {
         if (carrito.length === 0) return alert("El pedido está vacío.");
-        const numWA = (baseDeDatos[0] && baseDeDatos[0].wa) ? baseDeDatos[0].wa.trim() : "54911XXXXXXXX";
+        // Busca el número en la primera fila (columna K)
+        const numWA = (baseDeDatos[0] && baseDeDatos[0].wa) ? baseDeDatos[0].wa : "54911XXXXXXXX";
         let total = 0;
         let lista = `*NUEVO PEDIDO - SISTEMA IA*\n*UBICACIÓN:* ${mesaActual}\n\n`;
         carrito.forEach(i => { 
@@ -227,8 +238,7 @@
             total += parseFloat(i.precio); 
         });
         lista += `\n*TOTAL:* $${total.toFixed(2)}`;
-        const urlWa = `https://wa.me/${numWA}?text=${encodeURIComponent(lista)}`;
-        window.open(urlWa, '_blank');
+        window.open(`https://wa.me/${numWA}?text=${encodeURIComponent(lista)}`, '_blank');
     }
 </script>
 </body>
