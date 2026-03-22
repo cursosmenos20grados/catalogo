@@ -3,162 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:image" content="https://raw.githubusercontent.com/cursosmenos20grados/catalogo/refs/heads/main/moza_robot.jpg?v=500">
-    <title>Panel Admin |Parrilla Restaurante</title>
+    <title>Admin | Parrilla Los Hermanos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* 1. Centramos el body y limitamos el ancho */
-        body { 
-            font-family: sans-serif; 
-            background: #0f172a; 
-            color: white; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; /* Centra horizontalmente */
+        :root {
+            --primary: #2ecc71;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
-        /* 2. Contenedor para que todo tenga el mismo ancho */
-        .main-container {
+        .container {
             width: 100%;
-            max-width: 600px; /* Ancho ideal para celulares y PC */
+            max-width: 600px;
+            background: var(--card);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
-
-        .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 20px; 
+        h1 { color: var(--primary); text-align: center; margin-top: 0; }
+        .section {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #334155;
+        }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #94a3b8; }
+        input[type="text"], input[type="file"] {
             width: 100%;
-        }
-
-        .card { 
-            background: #1e293b; 
-            padding: 15px; 
-            border-radius: 12px; 
-            margin-bottom: 10px; 
-            border-left: 5px solid #2ecc71; 
-            text-align: left; /* Mantiene el texto del producto a la izquierda */
-        }
-
-        .no-stock { border-left-color: #e74c3c; opacity: 0.6; }
-
-        .btn-edit { 
-            background: #3498db; 
-            color: white; 
-            padding: 10px; 
-            border-radius: 8px; 
-            text-decoration: none; 
-            font-size: 0.8em; 
-        }
-
-        .stats { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-            margin-bottom: 20px; 
-        }
-
-        .stat-box { 
-            background: #334155; 
-            padding: 15px; 
-            border-radius: 10px; 
-            text-align: center; 
-        }
-
-        .precio { color: #2ecc71; font-weight: bold; }
-        
-        .qr-section {
-            text-align: center; 
-            margin: 30px 0; 
-            padding: 20px; 
-            background: rgba(255,255,255,0.05); 
-            border-radius: 15px;
-            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 8px;
             box-sizing: border-box;
         }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .stat-item b { display: block; font-size: 1.5rem; color: var(--primary); }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            text-align: center;
+        }
+        .alert-success { background: rgba(46, 204, 113, 0.2); color: var(--primary); border: 1px solid var(--primary); }
     </style>
 </head>
 <body>
 
-<div class="main-container">
+    <div class="container">
+        <h1><i class="fas fa-tools"></i> Panel de Control</h1>
+        <p style="text-align: center; color: #94a3b8;">Configuración de Parrilla Los Hermanos</p>
 
-    <div class="header">
-        <h2 style="font-size: 1.2em;">Control Parrilla Restaurante </h2>
-        <a href="https://docs.google.com/spreadsheets/d/19C3LcmEyUhJ-feULW6wa-vgGkXbmJAsCP84cYnK_5ZU/edit" target="_blank" class="btn-edit">📝 EXCEL</a>
-    </div>
-
-    <div class="stats">
-        <div class="stat-box">
-            <small>Activos</small>
-            <h3 id="count-active">0</h3>
+        <div class="section">
+            <label>WhatsApp del Local (Formato: 54911...)</label>
+            <input type="text" id="ws-number" placeholder="Ej: 5491122334455">
+            <button class="btn" onclick="saveWS()"><i class="fas fa-save"></i> Guardar WhatsApp</button>
         </div>
-        <div class="stat-box">
-            <small>Sin Stock</small>
-            <h3 id="count-inactive" style="color:#e74c3c">0</h3>
+
+        <div class="section">
+            <label>Actualizar Menú (Archivo Excel)</label>
+            <input type="file" id="excel-file" accept=".xlsx, .xls">
+            <button class="btn" style="background: #3b82f6;" onclick="processExcel()">
+                <i class="fas fa-file-import"></i> Cargar Productos desde Excel
+            </button>
         </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <b id="count-prod">0</b>
+                <span>Productos</span>
+            </div>
+            <div class="stat-item">
+                <b id="status-ws"><i class="fas fa-times-circle" style="color:#ef4444"></i></b>
+                <span>WhatsApp</span>
+            </div>
+        </div>
+
+        <div id="alert-msg" class="alert alert-success"></div>
+        
+        <p style="font-size: 0.8rem; color: #64748b; margin-top: 30px; text-align: center;">
+            Los datos se guardan en este navegador. Asegúrate de usar la misma PC/Navegador para administrar.
+        </p>
     </div>
 
-    <div id="admin-lista">Cargando inventario...</div>
+<script>
+    window.onload = () => {
+        updateStats();
+        const savedWS = localStorage.getItem('ws_hermanos');
+        if(savedWS) document.getElementById('ws-number').value = savedWS;
+    };
 
-    <div class="qr-section">
-        <p style="font-size: 0.9em; color: #94a3b8; margin-bottom: 15px;">
-            📍 Escaneá para ver el Menú Digital
-        </p>
-        <img src="https://github.com/cursosmenos20grados/catalogo/blob/main/qr-code.jpg?raw=true" 
-             alt="QR Helados.mix" 
-             style="width: 180px; height: 180px; border-radius: 12px; border: 3px solid #2ecc71;">
-        <p style="font-size: 0.75em; color: #2ecc71; margin-top: 10px; font-weight: bold; word-break: break-all;">
-             "Parrilla Restaurante TU PARRILLA"
-
-
-        </p>
-    </div>
-
-</div> <script>
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRbg-JdC7bjpgQH1vwdq1m8Or_FTyZXG56lI152bs-_rjFp8yCNYnujB8CCkO_gFkmvEfczJ9uMaXzK/pub?output=csv';
-
-    async function cargarAdmin() {
-        try {
-            const res = await fetch(CSV_URL);
-            const data = await res.text();
-            const filas = data.replace(/\r/g, "").split('\n').slice(1);
-            
-            const productos = filas.map(f => {
-                const c = f.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                return {
-                    nombre: c[2] ? c[2].replace(/"/g, "") : "Sin nombre",
-                    precio: c[4] || "0",
-                    disp: c[6] ? c[6].toUpperCase().trim() : "NO"
-                };
-            }).filter(p => p.nombre !== "Sin nombre");
-
-            const cont = document.getElementById('admin-lista');
-            cont.innerHTML = "";
-            
-            let activos = 0;
-            let inactivos = 0;
-
-            productos.forEach(p => {
-                const esActivo = p.disp.includes("SI");
-                if(esActivo) activos++; else inactivos++;
-
-                cont.innerHTML += `
-                    <div class="card ${esActivo ? '' : 'no-stock'}">
-                        <strong>${p.nombre}</strong><br>
-                        <span class="precio">$${p.precio}</span> | 
-                        <span>${esActivo ? '✅ EN VENTA' : '❌ PAUSADO'}</span>
-                    </div>`;
-            });
-
-            document.getElementById('count-active').innerText = activos;
-            document.getElementById('count-inactive').innerText = inactivos;
-        } catch (e) {
-            document.getElementById('admin-lista').innerText = "Error al cargar datos.";
-        }
+    function updateStats() {
+        const items = JSON.parse(localStorage.getItem('menu_hermanos')) || [];
+        document.getElementById('count-prod').innerText = items.length;
+        
+        const ws = localStorage.getItem('ws_hermanos');
+        document.getElementById('status-ws').innerHTML = ws ? 
+            '<i class="fas fa-check-circle"></i>' : 
+            '<i class="fas fa-times-circle" style="color:#ef4444"></i>';
     }
 
-    cargarAdmin();
+    function showAlert(text) {
+        const el = document.getElementById('alert-msg');
+        el.innerText = text;
+        el.style.display = 'block';
+        setTimeout(() => el.style.display = 'none', 3000);
+    }
+
+    function saveWS() {
+        const num = document.getElementById('ws-number').value.trim();
+        if(!num) return alert("Ingresa un número válido");
+        localStorage.setItem('ws_hermanos', num);
+        showAlert("¡WhatsApp guardado correctamente!");
+        updateStats();
+    }
+
+    function processExcel() {
+        const fileInput = document.getElementById('excel-file');
+        const file = fileInput.files[0];
+        if (!file) return alert("Selecciona un archivo Excel.");
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+            if(jsonData.length > 0) {
+                // Adaptamos las columnas del Excel que mostraste en la imagen
+                const formattedData = jsonData.map(item => ({
+                    nombre: item.Producto || item.producto || item.nombre,
+                    precio: item.Precio || item.precio,
+                    categoria: item.Categoria || item.categoria,
+                    descripcion: item.Descripcion || item.descripcion || "",
+                    imagen: item.ImagenURL || item.imagen || "",
+                    disponible: (item.Disponible === "SI" || item.Disponible === "si" || item.Disponible === true),
+                    destacado: (item.Destacado === "SI" || item.Destacado === "si" || item.Destacado === true),
+                    sugerencia: item.Sugerencia_IA || item.sugerencia || "",
+                    tags: item.Tags || item.tags || ""
+                }));
+
+                localStorage.setItem('menu_hermanos', JSON.stringify(formattedData));
+                showAlert(`¡Listo! Se cargaron ${formattedData.length} productos.`);
+                updateStats();
+            } else {
+                alert("El archivo está vacío o no tiene el formato correcto.");
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
 </script>
 </body>
 </html>
