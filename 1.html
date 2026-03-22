@@ -186,19 +186,36 @@
             <div class="welcome-card">
                 <h1 style="margin:0; font-size: 1.8rem;">🔥 Los Hermanos</h1>
                 <p style="color: var(--text-muted); margin-top: 5px;">Parrilla & Restaurante</p>
-                <select id="ubicacion" class="select-mesa">
-                    <option value="" disabled selected>Selecciona tu Mesa...</option>
-                    <option value="Salón - Mesa 1">Salón - Mesa 1</option>
-                    <option value="Salón - Mesa 2">Salón - Mesa 2</option>
-                    <option value="Salón - Mesa 3">Salón - Mesa 3</option>
-                    <option value="Salón - Mesa 4">Salón - Mesa 4</option>
-                    <option value="Salón - Mesa 5">Salón - Mesa 5</option>
-                    <option value="Salón - Mesa 6">Salón - Mesa 6</option>
-                    <option value="Salón - Mesa 7">Salón - Mesa 7</option>
-                    <option value="Vereda - Mesa 1">Vereda - Mesa 1</option>
-                    <option value="Vereda - Mesa 2">Vereda - Mesa 2</option>
-                    <option value="Vereda - Mesa 3">Vereda - Mesa 3</option>
-                </select>
+               <select id="ubicacion" class="select-mesa">
+            <option value="" disabled selected>-- SELECCIONA TU LUGAR --</option>
+            <optgroup label="SALÓN PRINCIPAL">
+                <option value="Salón - Mesa 1">Mesa 1 (Salón)</option>
+                <option value="Salón - Mesa 2">Mesa 2 (Salón)</option>
+                <option value="Salón - Mesa 3">Mesa 3 (Salón)</option>
+                <option value="Salón - Mesa 4">Mesa 4 (Salón)</option>
+                <option value="Salón - Mesa 5">Mesa 5 (Salón)</option>
+                <option value="Salón - Mesa 6">Mesa 6 (Salón)</option>
+                <option value="Salón - Mesa 7">Mesa 7 (Salón)</option>
+                <option value="Salón - Mesa 8">Mesa 8 (Salón)</option>
+                <option value="Salón - Mesa 9">Mesa 9 (Salón)</option>
+            </optgroup>
+            <optgroup label="MESAS A LA CALLE">
+                <option value="Calle - Mesa 1">Mesa 1 (Calle)</option>
+                <option value="Calle - Mesa 2">Mesa 2 (Calle)</option>
+                <option value="Calle - Mesa 3">Mesa 3 (Calle)</option>
+                <option value="Calle - Mesa 4">Mesa 4 (Calle)</option>
+                <option value="Calle - Mesa 5">Mesa 5 (Calle)</option>
+                <option value="Calle - Mesa 6">Mesa 6 (Calle)</option>
+                <option value="Calle - Mesa 7">Mesa 7 (Calle)</option>
+                <option value="Calle - Mesa 8">Mesa 8 (Calle)</option>
+                <option value="Calle - Mesa 9">Mesa 9 (Calle)</option>
+                <option value="Calle - Mesa 10">Mesa 10 (Calle)</option>
+            </optgroup>
+            <optgroup label="OTROS">
+                <option value="Barra">🍸 Barra</option>
+                <option value="Moto Delivery">🛵 Moto Delivery</option>
+            </optgroup>
+        </select>
                 <button class="btn-start" onclick="iniciarMenu()">ENTRAR AL MENÚ</button>
             </div>
         </div>
@@ -225,32 +242,23 @@
     
     let menuData = [];
     let cart = [];
-    // Número por defecto de tu Excel por si falla la lectura (5491127133428)
     let WHATSAPP_DESTINO = "5491127133428"; 
 
     async function cargarDatos() {
         try {
             const resp = await fetch(`${CSV_URL}&v=${Date.now()}`);
             const csv = await resp.text();
-            
-            // Separamos por líneas
             const lines = csv.split("\n");
-            // Identificamos cabeceras
             const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
             
-            // Buscamos la columna WhatsApp (generalmente es la K, índice 10 u 11)
             let wsIdx = headers.findIndex(h => h.includes("whatsapp"));
-            if(wsIdx === -1) wsIdx = 10; // Forzamos columna K si no la encuentra por nombre
+            if(wsIdx === -1) wsIdx = 10;
 
             menuData = [];
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
-                
-                // Usamos una expresión regular para separar por comas respetando comillas
                 const cols = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(",");
-                
                 const obj = {};
-                // Mapeo manual basado en tu estructura visual de Excel
                 obj.ID = (cols[0] || i).toString().trim();
                 obj.Categoria = (cols[1] || "Otros").replace(/"/g, "").trim();
                 obj.Producto = (cols[2] || "S/N").replace(/"/g, "").trim();
@@ -259,17 +267,14 @@
                 obj.ImagenURL = (cols[5] || "").replace(/"/g, "").trim();
                 obj.Disponible = (cols[6] || "SI").replace(/"/g, "").trim();
 
-                // Capturar el WhatsApp del Excel si está presente en esta fila
                 if (cols[wsIdx]) {
                     const foundNum = cols[wsIdx].replace(/\D/g, '');
                     if (foundNum.length > 8) {
                         WHATSAPP_DESTINO = foundNum;
                     }
                 }
-
                 menuData.push(obj);
             }
-            console.log("Número final configurado:", WHATSAPP_DESTINO);
         } catch (e) {
             console.error("Error cargando Excel:", e);
         }
