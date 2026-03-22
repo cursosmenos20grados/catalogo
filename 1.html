@@ -12,9 +12,13 @@
             --card: #1e293b;
             --text: #f8fafc;
             --text-muted: #94a3b8;
+            --max-width: 500px;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -22,15 +26,23 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.4;
-            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
         }
 
-        /* Pantalla de Bienvenida con fondo más nítido */
+        .main-container {
+            width: 100%;
+            max-width: var(--max-width);
+            min-height: 100vh;
+            background: var(--bg);
+            position: relative;
+        }
+
+        /* Pantalla de Bienvenida */
         #welcome {
             position: fixed;
             inset: 0;
-            /* Se utiliza una imagen de alta resolución y un degradado más sutil para mayor nitidez */
-            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.9)), 
+            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.9)), 
                         url('https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2069&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
@@ -64,12 +76,7 @@
             font-size: 1rem;
             margin: 20px 0;
             outline: none;
-            appearance: none;
-            cursor: pointer;
         }
-
-        optgroup { background: #1e293b; color: var(--primary); font-weight: bold; }
-        option { background: #0f172a; color: white; }
 
         .btn-start {
             background: var(--primary);
@@ -81,26 +88,32 @@
             width: 100%;
             font-size: 1.1rem;
             cursor: pointer;
-            transition: transform 0.2s;
         }
-        .btn-start:disabled { background: #475569; cursor: not-allowed; }
 
         /* App Principal */
-        #app { display: none; padding-top: 135px; padding-bottom: 100px; }
+        #app { 
+            display: none; 
+            padding-top: 140px; 
+            padding-bottom: 100px; 
+        }
 
         header {
             position: fixed;
-            top: 0; left: 0; right: 0;
-            background: var(--card);
+            top: 0;
+            width: 100%;
+            max-width: var(--max-width);
+            background: #111827;
             z-index: 500;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
-            border-bottom: 1px solid #334155;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
         .nav-categories {
             position: fixed;
-            top: 65px; left: 0; right: 0;
+            top: 75px;
+            width: 100%;
+            max-width: var(--max-width);
             background: var(--bg);
             display: flex;
             gap: 10px;
@@ -109,62 +122,110 @@
             white-space: nowrap;
             scrollbar-width: none;
             z-index: 400;
-            border-bottom: 1px solid #1e293b;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
+        .nav-categories::-webkit-scrollbar { display: none; }
+
         .cat-tab {
-            background: var(--card);
+            background: #334155;
             padding: 8px 18px;
             border-radius: 20px;
             font-size: 0.85rem;
-            color: var(--text-muted);
-            border: 1px solid #334155;
+            color: white;
+            border: none;
+            cursor: pointer;
         }
-        .cat-tab.active { background: var(--primary); color: white; }
+        .cat-tab.active { background: var(--primary); }
 
         .section-title {
-            padding: 25px 15px 10px;
-            font-size: 1.1rem;
+            padding: 20px 15px 10px;
+            font-size: 1.4rem;
             color: var(--primary);
             font-weight: 800;
-            text-transform: uppercase;
         }
 
+        /* Tarjeta de Producto */
         .product-card {
             background: var(--card);
-            margin: 0 12px 12px;
-            padding: 12px;
-            border-radius: 16px;
+            margin: 15px;
+            border-radius: 20px;
+            overflow: hidden;
             display: flex;
-            gap: 12px;
-            align-items: center;
+            flex-direction: column;
             border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
         .product-img {
-            width: 70px; height: 70px;
-            border-radius: 12px;
+            width: 100%;
+            height: 200px;
             object-fit: cover;
             background: #0f172a;
         }
 
-        .product-info { flex: 1; }
-        .product-name { font-weight: bold; font-size: 0.95rem; }
-        .product-desc { font-size: 0.8rem; color: var(--text-muted); }
-        .product-price { color: var(--primary); font-weight: 800; }
+        .product-body {
+            padding: 15px;
+        }
 
-        .btn-add-circle {
-            width: 38px; height: 38px;
-            border-radius: 12px;
-            background: #334155;
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .product-price {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .product-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            min-height: 1.2em;
+        }
+
+        .btn-add {
+            background: var(--primary);
             color: white;
             border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .btn-add-circle.selected { background: var(--primary); }
+
+        .btn-add.selected {
+            background: #15803d;
+        }
+
+        /* Barra de Pedido Flotante */
+        .order-bar-container {
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            max-width: var(--max-width);
+            padding: 0 15px;
+            pointer-events: none;
+            z-index: 1000;
+        }
 
         .order-bar {
-            position: fixed;
-            bottom: 20px; left: 15px; right: 15px;
             background: var(--primary);
             color: white;
             padding: 16px 20px;
@@ -172,65 +233,55 @@
             display: none;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
+            pointer-events: auto;
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.4);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <div id="welcome">
-        <div class="welcome-card">
-            <h1 style="margin:0; font-size: 1.6rem;">🔥 Parrilla Hermanos</h1>
-            <p style="color: var(--text-muted); margin: 8px 0 20px; font-size: 0.9rem;">Bienvenido, selecciona tu ubicación:</p>
-            
-            <select id="ubicacion" class="select-mesa">
-                <option value="" disabled selected>-- SELECCIONA TU LUGAR --</option>
-                <optgroup label="SALÓN PRINCIPAL">
-                    <option value="Salón - Mesa 1">Mesa 1 (Salón)</option>
-                    <option value="Salón - Mesa 2">Mesa 2 (Salón)</option>
-                    <option value="Salón - Mesa 3">Mesa 3 (Salón)</option>
-                    <option value="Salón - Mesa 4">Mesa 4 (Salón)</option>
-                    <option value="Salón - Mesa 5">Mesa 5 (Salón)</option>
-                    <option value="Salón - Mesa 6">Mesa 6 (Salón)</option>
-                    <option value="Salón - Mesa 7">Mesa 7 (Salón)</option>
-                    <option value="Salón - Mesa 8">Mesa 8 (Salón)</option>
-                    <option value="Salón - Mesa 9">Mesa 9 (Salón)</option>
-                </optgroup>
-                <optgroup label="MESAS A LA CALLE">
-                    <option value="Calle - Mesa 1">Mesa 1 (Calle)</option>
-                    <option value="Calle - Mesa 2">Mesa 2 (Calle)</option>
-                    <option value="Calle - Mesa 3">Mesa 3 (Calle)</option>
-                    <option value="Calle - Mesa 4">Mesa 4 (Calle)</option>
-                    <option value="Calle - Mesa 5">Mesa 5 (Calle)</option>
-                    <option value="Calle - Mesa 6">Mesa 6 (Calle)</option>
-                    <option value="Calle - Mesa 7">Mesa 7 (Calle)</option>
-                    <option value="Calle - Mesa 8">Mesa 8 (Calle)</option>
-                    <option value="Calle - Mesa 9">Mesa 9 (Calle)</option>
-                    <option value="Calle - Mesa 10">Mesa 10 (Calle)</option>
-                </optgroup>
-                <optgroup label="OTROS">
-                    <option value="Barra">🍸 Barra</option>
-                    <option value="Moto Delivery">🛵 Moto Delivery</option>
-                </optgroup>
-            </select>
-            
-            <button class="btn-start" id="btn-entrar" onclick="iniciarMenu()">VER LA CARTA</button>
-        </div>
-    </div>
-
-    <div id="app">
-        <header>
-            <div id="display-mesa" style="font-weight:bold; color:var(--primary); font-size: 1.1rem;"></div>
-        </header>
-        <div id="nav-cats" class="nav-categories"></div>
-        <div id="menu-list"></div>
-        <div id="order-bar" class="order-bar" onclick="enviarWhatsApp()">
-            <div class="order-info">
-                <span id="cart-count">0 productos</span>
-                <span id="cart-total">$0</span>
+    <div class="main-container">
+        <!-- Pantalla de Bienvenida -->
+        <div id="welcome">
+            <div class="welcome-card">
+                <h1 style="margin:0; font-size: 1.8rem;">🔥 Los Hermanos</h1>
+                <p style="color: var(--text-muted); margin: 10px 0;">Menú Digital</p>
+                
+                <select id="ubicacion" class="select-mesa">
+                    <option value="" disabled selected>Selecciona tu mesa...</option>
+                    <optgroup label="SALÓN">
+                        <option value="Salón - Mesa 1">Mesa 1</option>
+                        <option value="Salón - Mesa 7">Mesa 7</option>
+                    </optgroup>
+                    <optgroup label="CALLE">
+                        <option value="Calle - Mesa 3">Mesa 3</option>
+                    </optgroup>
+                </select>
+                
+                <button class="btn-start" onclick="iniciarMenu()">VER LA CARTA</button>
             </div>
-            <div style="background: rgba(255,255,255,0.2); padding: 10px 18px; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
-                PEDIR <i class="fab fa-whatsapp" style="font-size:1.4rem;"></i>
+        </div>
+
+        <!-- App Principal -->
+        <div id="app">
+            <header>
+                <div id="display-mesa" style="font-weight:bold; color:var(--primary); font-size: 1.1rem; text-transform: uppercase;"></div>
+            </header>
+
+            <div id="nav-cats" class="nav-categories"></div>
+            
+            <div id="menu-list"></div>
+            
+            <div class="order-bar-container">
+                <div id="order-bar" class="order-bar" onclick="enviarWhatsApp()">
+                    <div class="order-info">
+                        <span id="cart-count">0 items</span> • <span id="cart-total">$0</span>
+                    </div>
+                    <div style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                        PEDIR <i class="fab fa-whatsapp"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -240,17 +291,17 @@
     
     let menuData = [];
     let cart = [];
+    let whatsappDefault = "5491168160001"; // Fallback por si no hay en el Excel
 
     function csvToJSON(csv) {
         const lines = csv.split("\n");
         const result = [];
-        const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+        const headers = lines[0].split(",").map(h => h.trim());
 
         for (let i = 1; i < lines.length; i++) {
             if (!lines[i]) continue;
             const obj = {};
             const currentline = lines[i].split(",");
-
             headers.forEach((header, sIdx) => {
                 obj[header] = currentline[sIdx] ? currentline[sIdx].trim() : "";
             });
@@ -259,25 +310,23 @@
         return result;
     }
 
-    async function cargarDatosSheets() {
-        const btn = document.getElementById('btn-entrar');
-        btn.innerText = "ACTUALIZANDO CARTA...";
-        btn.disabled = true;
-
+    async function cargarDatos() {
         try {
             const response = await fetch(`${SHEET_CSV_URL}&v=${Date.now()}`);
             const csvText = await response.text();
             menuData = csvToJSON(csvText);
             
-            btn.innerText = "VER LA CARTA";
-            btn.disabled = false;
+            // Intentar tomar el WhatsApp de la primera fila si existe la columna "WhatsApp"
+            if (menuData.length > 0 && menuData[0].WhatsApp) {
+                whatsappDefault = menuData[0].WhatsApp.replace(/\D/g, ''); // Limpiar caracteres no numéricos
+                console.log("WhatsApp cargado desde Excel:", whatsappDefault);
+            }
         } catch (error) {
-            console.error("Error:", error);
-            btn.innerText = "ERROR DE CONEXIÓN";
+            console.error("Error cargando datos:", error);
         }
     }
 
-    window.onload = cargarDatosSheets;
+    window.onload = cargarDatos;
 
     function iniciarMenu() {
         const mesa = document.getElementById('ubicacion').value;
@@ -285,66 +334,71 @@
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('app').style.display = 'block';
         document.getElementById('display-mesa').innerText = "📍 " + mesa;
-        renderizarTodo();
+        renderizarMenu();
     }
 
-    function renderizarTodo() {
+    function renderizarMenu() {
         const container = document.getElementById('menu-list');
         const nav = document.getElementById('nav-cats');
         container.innerHTML = ""; nav.innerHTML = "";
 
-        const disponibles = menuData.filter(p => p.disponible && p.disponible.toUpperCase() !== "NO");
-        const categorias = [...new Set(disponibles.map(p => p.categoria || "VARIOS"))];
+        const items = menuData.filter(p => p.Disponible && p.Disponible.toUpperCase() === "SI");
+        const categorias = [...new Set(items.map(p => p.Categoria))];
         
         categorias.forEach((cat, idx) => {
-            const btn = document.createElement('div');
+            const btn = document.createElement('button');
             btn.className = `cat-tab ${idx === 0 ? 'active' : ''}`;
             btn.innerText = cat;
             btn.onclick = () => {
                 document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
                 btn.classList.add('active');
-                document.getElementById('cat-sec-'+cat).scrollIntoView({behavior: "smooth", block: "start"});
+                const element = document.getElementById("sec-" + cat);
+                window.scrollTo({ top: element.offsetTop - 130, behavior: 'smooth' });
             };
             nav.appendChild(btn);
 
             const title = document.createElement('div');
-            title.className = "section-title"; title.id = "cat-sec-" + cat; title.innerText = cat;
+            title.className = "section-title";
+            title.id = "sec-" + cat;
+            title.innerText = cat;
             container.appendChild(title);
 
-            disponibles.filter(p => p.categoria === cat).forEach(prod => {
+            items.filter(p => p.Categoria === cat).forEach(prod => {
                 const card = document.createElement('div');
                 card.className = "product-card";
-                card.onclick = () => toggleProducto(prod, card);
-                
-                const imgHtml = prod.imagen && prod.imagen !== "" 
-                    ? `<img src="${prod.imagen}" class="product-img" onerror="this.src='https://via.placeholder.com/80?text=Parrilla'">`
-                    : `<div class="product-img" style="display:flex;align-items:center;justify-content:center;background:#1e293b;"><i class="fas fa-fire"></i></div>`;
+                const urlImagen = prod.ImagenURL || 'https://via.placeholder.com/500x300?text=Parrilla';
 
                 card.innerHTML = `
-                    ${imgHtml}
-                    <div class="product-info">
-                        <span class="product-name">${prod.nombre}</span>
-                        <p class="product-desc">${prod.descripcion || ''}</p>
-                        <span class="product-price">$${Number(prod.precio).toLocaleString('es-AR')}</span>
+                    <img src="${urlImagen}" class="product-img" onerror="this.src='https://via.placeholder.com/500x300?text=${prod.Producto}'">
+                    <div class="product-body">
+                        <div class="product-header">
+                            <span class="product-name">${prod.Producto}</span>
+                            <span class="product-price">$${Number(prod.Precio).toLocaleString('es-AR')}</span>
+                        </div>
+                        <p class="product-desc">${prod.Descripcion || 'Sin descripción disponible'}</p>
+                        <button class="btn-add" id="btn-${prod.ID}" onclick="toggleCarrito('${prod.ID}')">
+                            <i class="fas fa-plus"></i> AGREGAR
+                        </button>
                     </div>
-                    <button class="btn-add-circle"><i class="fas fa-plus"></i></button>
                 `;
                 container.appendChild(card);
             });
         });
     }
 
-    function toggleProducto(prod, cardEl) {
-        const btn = cardEl.querySelector('.btn-add-circle');
-        const index = cart.findIndex(i => i.nombre === prod.nombre);
+    function toggleCarrito(id) {
+        const prod = menuData.find(p => p.ID === id);
+        const index = cart.findIndex(i => i.ID === id);
+        const btn = document.getElementById('btn-'+id);
+
         if(index > -1) {
             cart.splice(index, 1);
             btn.classList.remove('selected');
-            btn.innerHTML = '<i class="fas fa-plus"></i>';
+            btn.innerHTML = '<i class="fas fa-plus"></i> AGREGAR';
         } else {
             cart.push(prod);
             btn.classList.add('selected');
-            btn.innerHTML = '<i class="fas fa-check"></i>';
+            btn.innerHTML = '<i class="fas fa-check"></i> AGREGADO';
         }
         actualizarBarra();
     }
@@ -353,22 +407,28 @@
         const bar = document.getElementById('order-bar');
         if(cart.length > 0) {
             bar.style.display = 'flex';
-            const total = cart.reduce((s, i) => s + Number(i.precio), 0);
-            document.getElementById('cart-count').innerText = `${cart.length} ítems`;
+            const total = cart.reduce((s, i) => s + Number(i.Precio), 0);
+            document.getElementById('cart-count').innerText = `${cart.length} productos`;
             document.getElementById('cart-total').innerText = `$${total.toLocaleString('es-AR')}`;
-        } else { bar.style.display = 'none'; }
+        } else {
+            bar.style.display = 'none';
+        }
     }
 
     function enviarWhatsApp() {
-        const ws = localStorage.getItem('ws_hermanos') || "5491168160001"; 
         const mesa = document.getElementById('ubicacion').value;
-        const total = cart.reduce((s, i) => s + Number(i.precio), 0);
+        const total = cart.reduce((s, i) => s + Number(i.Precio), 0);
         
-        let mensaje = `*NUEVO PEDIDO - ${mesa.toUpperCase()}*\n----------\n`;
-        cart.forEach(item => mensaje += `• ${item.nombre} ($${item.precio})\n`);
-        mensaje += `----------\n*TOTAL: $${total.toLocaleString('es-AR')}*`;
+        let msj = `*NUEVO PEDIDO - ${mesa.toUpperCase()}*\n`;
+        msj += `------------------------------\n`;
+        cart.forEach(item => {
+            msj += `• ${item.Producto} ($${item.Precio})\n`;
+        });
+        msj += `------------------------------\n`;
+        msj += `*TOTAL: $${total.toLocaleString('es-AR')}*`;
         
-        window.open(`https://wa.me/${ws}?text=${encodeURIComponent(mensaje)}`, '_blank');
+        // El número ahora se toma de la variable cargada desde el Excel
+        window.open(`https://wa.me/${whatsappDefault}?text=${encodeURIComponent(msj)}`, '_blank');
     }
 </script>
 </body>
