@@ -15,17 +15,13 @@
             --max-width: 500px;
         }
 
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.4;
             display: flex;
             justify-content: center;
         }
@@ -34,7 +30,6 @@
             width: 100%;
             max-width: var(--max-width);
             min-height: 100vh;
-            background: var(--bg);
             position: relative;
         }
 
@@ -42,7 +37,7 @@
         #welcome {
             position: fixed;
             inset: 0;
-            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.9)), 
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.95)), 
                         url('https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2069&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
@@ -62,7 +57,6 @@
             border-radius: 24px;
             width: 100%;
             max-width: 380px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.1);
         }
 
@@ -73,9 +67,8 @@
             border: 2px solid var(--primary);
             color: white;
             border-radius: 12px;
-            font-size: 1rem;
             margin: 20px 0;
-            outline: none;
+            font-size: 1rem;
         }
 
         .btn-start {
@@ -91,11 +84,7 @@
         }
 
         /* App Principal */
-        #app { 
-            display: none; 
-            padding-top: 140px; 
-            padding-bottom: 100px; 
-        }
+        #app { display: none; padding-top: 140px; padding-bottom: 100px; }
 
         header {
             position: fixed;
@@ -106,7 +95,7 @@
             z-index: 500;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
         .nav-categories {
@@ -119,22 +108,20 @@
             gap: 10px;
             padding: 15px;
             overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: none;
             z-index: 400;
             border-bottom: 1px solid rgba(255,255,255,0.05);
+            scrollbar-width: none;
         }
-
         .nav-categories::-webkit-scrollbar { display: none; }
 
         .cat-tab {
             background: #334155;
             padding: 8px 18px;
             border-radius: 20px;
-            font-size: 0.85rem;
             color: white;
             border: none;
-            cursor: pointer;
+            white-space: nowrap;
+            font-size: 0.9rem;
         }
         .cat-tab.active { background: var(--primary); }
 
@@ -145,83 +132,38 @@
             font-weight: 800;
         }
 
-        /* Tarjeta de Producto */
         .product-card {
             background: var(--card);
             margin: 15px;
             border-radius: 20px;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
             border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
-        .product-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: #0f172a;
-        }
-
-        .product-body {
-            padding: 15px;
-        }
-
-        .product-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-        }
-
-        .product-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .product-price {
-            color: var(--primary);
-            font-weight: 800;
-            font-size: 1.1rem;
-        }
-
-        .product-desc {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            min-height: 1.2em;
-        }
+        .product-img { width: 100%; height: 180px; object-fit: cover; background: #000; }
+        .product-body { padding: 15px; }
+        .product-name { font-size: 1.1rem; font-weight: bold; color: white; }
+        .product-price { color: var(--primary); font-weight: 800; float: right; font-size: 1.1rem; }
+        .product-desc { font-size: 0.9rem; color: var(--text-muted); margin-top: 8px; min-height: 40px; }
 
         .btn-add {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 14px;
             border-radius: 12px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
             width: 100%;
+            font-weight: bold;
+            margin-top: 15px;
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        .btn-add.selected {
-            background: #15803d;
-        }
-
-        /* Barra de Pedido Flotante */
         .order-bar-container {
             position: fixed;
             bottom: 20px;
             width: 100%;
             max-width: var(--max-width);
             padding: 0 15px;
-            pointer-events: none;
             z-index: 1000;
         }
 
@@ -233,53 +175,45 @@
             display: none;
             justify-content: space-between;
             align-items: center;
-            pointer-events: auto;
             box-shadow: 0 10px 30px rgba(46, 204, 113, 0.4);
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <!-- Pantalla de Bienvenida -->
         <div id="welcome">
             <div class="welcome-card">
                 <h1 style="margin:0; font-size: 1.8rem;">🔥 Los Hermanos</h1>
-                <p style="color: var(--text-muted); margin: 10px 0;">Menú Digital</p>
-                
+                <p style="color: var(--text-muted); margin-top: 5px;">Parrilla & Restaurante</p>
                 <select id="ubicacion" class="select-mesa">
-                    <option value="" disabled selected>Selecciona tu mesa...</option>
-                    <optgroup label="SALÓN">
-                        <option value="Salón - Mesa 1">Mesa 1</option>
-                        <option value="Salón - Mesa 7">Mesa 7</option>
-                    </optgroup>
-                    <optgroup label="CALLE">
-                        <option value="Calle - Mesa 3">Mesa 3</option>
-                    </optgroup>
+                    <option value="" disabled selected>Selecciona tu Mesa...</option>
+                    <option value="Salón - Mesa 1">Salón - Mesa 1</option>
+                    <option value="Salón - Mesa 2">Salón - Mesa 2</option>
+                    <option value="Salón - Mesa 3">Salón - Mesa 3</option>
+                    <option value="Salón - Mesa 4">Salón - Mesa 4</option>
+                    <option value="Salón - Mesa 5">Salón - Mesa 5</option>
+                    <option value="Salón - Mesa 6">Salón - Mesa 6</option>
+                    <option value="Salón - Mesa 7">Salón - Mesa 7</option>
+                    <option value="Vereda - Mesa 1">Vereda - Mesa 1</option>
+                    <option value="Vereda - Mesa 2">Vereda - Mesa 2</option>
+                    <option value="Vereda - Mesa 3">Vereda - Mesa 3</option>
                 </select>
-                
-                <button class="btn-start" onclick="iniciarMenu()">VER LA CARTA</button>
+                <button class="btn-start" onclick="iniciarMenu()">ENTRAR AL MENÚ</button>
             </div>
         </div>
 
-        <!-- App Principal -->
         <div id="app">
             <header>
-                <div id="display-mesa" style="font-weight:bold; color:var(--primary); font-size: 1.1rem; text-transform: uppercase;"></div>
+                <div id="display-mesa" style="font-weight:bold; color:var(--primary); text-transform: uppercase;"></div>
             </header>
-
             <div id="nav-cats" class="nav-categories"></div>
-            
             <div id="menu-list"></div>
-            
             <div class="order-bar-container">
                 <div id="order-bar" class="order-bar" onclick="enviarWhatsApp()">
-                    <div class="order-info">
-                        <span id="cart-count">0 items</span> • <span id="cart-total">$0</span>
-                    </div>
+                    <div><span id="cart-count">0</span> ítems • <span id="cart-total">$0</span></div>
                     <div style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
-                        PEDIR <i class="fab fa-whatsapp"></i>
+                        ENVIAR PEDIDO <i class="fab fa-whatsapp"></i>
                     </div>
                 </div>
             </div>
@@ -287,42 +221,57 @@
     </div>
 
 <script>
-    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRbg-JdC7bjpgQH1vwdq1m8Or_FTyZXG56lI152bs-_rjFp8yCNYnujB8CCkO_gFkmvEfczJ9uMaXzK/pub?output=csv";
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRbg-JdC7bjpgQH1vwdq1m8Or_FTyZXG56lI152bs-_rjFp8yCNYnujB8CCkO_gFkmvEfczJ9uMaXzK/pub?output=csv";
     
     let menuData = [];
     let cart = [];
-    let whatsappDefault = "5491168160001"; // Fallback por si no hay en el Excel
-
-    function csvToJSON(csv) {
-        const lines = csv.split("\n");
-        const result = [];
-        const headers = lines[0].split(",").map(h => h.trim());
-
-        for (let i = 1; i < lines.length; i++) {
-            if (!lines[i]) continue;
-            const obj = {};
-            const currentline = lines[i].split(",");
-            headers.forEach((header, sIdx) => {
-                obj[header] = currentline[sIdx] ? currentline[sIdx].trim() : "";
-            });
-            result.push(obj);
-        }
-        return result;
-    }
+    // Número por defecto de tu Excel por si falla la lectura (5491127133428)
+    let WHATSAPP_DESTINO = "5491127133428"; 
 
     async function cargarDatos() {
         try {
-            const response = await fetch(`${SHEET_CSV_URL}&v=${Date.now()}`);
-            const csvText = await response.text();
-            menuData = csvToJSON(csvText);
+            const resp = await fetch(`${CSV_URL}&v=${Date.now()}`);
+            const csv = await resp.text();
             
-            // Intentar tomar el WhatsApp de la primera fila si existe la columna "WhatsApp"
-            if (menuData.length > 0 && menuData[0].WhatsApp) {
-                whatsappDefault = menuData[0].WhatsApp.replace(/\D/g, ''); // Limpiar caracteres no numéricos
-                console.log("WhatsApp cargado desde Excel:", whatsappDefault);
+            // Separamos por líneas
+            const lines = csv.split("\n");
+            // Identificamos cabeceras
+            const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+            
+            // Buscamos la columna WhatsApp (generalmente es la K, índice 10 u 11)
+            let wsIdx = headers.findIndex(h => h.includes("whatsapp"));
+            if(wsIdx === -1) wsIdx = 10; // Forzamos columna K si no la encuentra por nombre
+
+            menuData = [];
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                // Usamos una expresión regular para separar por comas respetando comillas
+                const cols = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(",");
+                
+                const obj = {};
+                // Mapeo manual basado en tu estructura visual de Excel
+                obj.ID = (cols[0] || i).toString().trim();
+                obj.Categoria = (cols[1] || "Otros").replace(/"/g, "").trim();
+                obj.Producto = (cols[2] || "S/N").replace(/"/g, "").trim();
+                obj.Descripcion = (cols[3] || "").replace(/"/g, "").trim();
+                obj.Precio = (cols[4] || "0").replace(/"/g, "").trim();
+                obj.ImagenURL = (cols[5] || "").replace(/"/g, "").trim();
+                obj.Disponible = (cols[6] || "SI").replace(/"/g, "").trim();
+
+                // Capturar el WhatsApp del Excel si está presente en esta fila
+                if (cols[wsIdx]) {
+                    const foundNum = cols[wsIdx].replace(/\D/g, '');
+                    if (foundNum.length > 8) {
+                        WHATSAPP_DESTINO = foundNum;
+                    }
+                }
+
+                menuData.push(obj);
             }
-        } catch (error) {
-            console.error("Error cargando datos:", error);
+            console.log("Número final configurado:", WHATSAPP_DESTINO);
+        } catch (e) {
+            console.error("Error cargando Excel:", e);
         }
     }
 
@@ -334,82 +283,72 @@
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('app').style.display = 'block';
         document.getElementById('display-mesa').innerText = "📍 " + mesa;
-        renderizarMenu();
+        renderMenu();
     }
 
-    function renderizarMenu() {
-        const container = document.getElementById('menu-list');
+    function renderMenu() {
+        const list = document.getElementById('menu-list');
         const nav = document.getElementById('nav-cats');
-        container.innerHTML = ""; nav.innerHTML = "";
+        list.innerHTML = ""; nav.innerHTML = "";
 
-        const items = menuData.filter(p => p.Disponible && p.Disponible.toUpperCase() === "SI");
-        const categorias = [...new Set(items.map(p => p.Categoria))];
-        
-        categorias.forEach((cat, idx) => {
-            const btn = document.createElement('button');
-            btn.className = `cat-tab ${idx === 0 ? 'active' : ''}`;
-            btn.innerText = cat;
-            btn.onclick = () => {
+        const items = menuData.filter(p => p.Disponible.toUpperCase() === "SI");
+        const cats = [...new Set(items.map(p => p.Categoria))];
+
+        cats.forEach((c, idx) => {
+            const b = document.createElement('button');
+            b.className = `cat-tab ${idx===0?'active':''}`;
+            b.innerText = c;
+            b.onclick = (e) => {
                 document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-                btn.classList.add('active');
-                const element = document.getElementById("sec-" + cat);
-                window.scrollTo({ top: element.offsetTop - 130, behavior: 'smooth' });
+                e.target.classList.add('active');
+                const target = document.getElementById('cat-'+c);
+                window.scrollTo({ top: target.offsetTop - 130, behavior: 'smooth' });
             };
-            nav.appendChild(btn);
+            nav.appendChild(b);
 
-            const title = document.createElement('div');
-            title.className = "section-title";
-            title.id = "sec-" + cat;
-            title.innerText = cat;
-            container.appendChild(title);
+            const t = document.createElement('div');
+            t.className = "section-title";
+            t.id = 'cat-'+c;
+            t.innerText = c;
+            list.appendChild(t);
 
-            items.filter(p => p.Categoria === cat).forEach(prod => {
+            items.filter(p => p.Categoria === c).forEach(prod => {
                 const card = document.createElement('div');
                 card.className = "product-card";
-                const urlImagen = prod.ImagenURL || 'https://via.placeholder.com/500x300?text=Parrilla';
-
                 card.innerHTML = `
-                    <img src="${urlImagen}" class="product-img" onerror="this.src='https://via.placeholder.com/500x300?text=${prod.Producto}'">
+                    <img src="${prod.ImagenURL}" class="product-img" onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=400&auto=format&fit=crop'">
                     <div class="product-body">
-                        <div class="product-header">
-                            <span class="product-name">${prod.Producto}</span>
-                            <span class="product-price">$${Number(prod.Precio).toLocaleString('es-AR')}</span>
-                        </div>
-                        <p class="product-desc">${prod.Descripcion || 'Sin descripción disponible'}</p>
-                        <button class="btn-add" id="btn-${prod.ID}" onclick="toggleCarrito('${prod.ID}')">
-                            <i class="fas fa-plus"></i> AGREGAR
-                        </button>
+                        <span class="product-price">$${prod.Precio}</span>
+                        <div class="product-name">${prod.Producto}</div>
+                        <div class="product-desc">${prod.Descripcion}</div>
+                        <button class="btn-add" id="btn-${prod.ID}" onclick="addToCart('${prod.ID}')">AGREGAR AL PEDIDO</button>
                     </div>
                 `;
-                container.appendChild(card);
+                list.appendChild(card);
             });
         });
     }
 
-    function toggleCarrito(id) {
-        const prod = menuData.find(p => p.ID === id);
-        const index = cart.findIndex(i => i.ID === id);
+    function addToCart(id) {
+        const p = menuData.find(x => x.ID === id);
+        const idx = cart.findIndex(c => c.ID === id);
         const btn = document.getElementById('btn-'+id);
 
-        if(index > -1) {
-            cart.splice(index, 1);
-            btn.classList.remove('selected');
-            btn.innerHTML = '<i class="fas fa-plus"></i> AGREGAR';
+        if(idx > -1) {
+            cart.splice(idx, 1);
+            btn.style.background = "var(--primary)";
+            btn.innerText = "AGREGAR AL PEDIDO";
         } else {
-            cart.push(prod);
-            btn.classList.add('selected');
-            btn.innerHTML = '<i class="fas fa-check"></i> AGREGADO';
+            cart.push(p);
+            btn.style.background = "#15803d";
+            btn.innerText = "✓ EN EL CARRITO";
         }
-        actualizarBarra();
-    }
-
-    function actualizarBarra() {
+        
         const bar = document.getElementById('order-bar');
         if(cart.length > 0) {
             bar.style.display = 'flex';
-            const total = cart.reduce((s, i) => s + Number(i.Precio), 0);
-            document.getElementById('cart-count').innerText = `${cart.length} productos`;
-            document.getElementById('cart-total').innerText = `$${total.toLocaleString('es-AR')}`;
+            document.getElementById('cart-count').innerText = cart.length;
+            document.getElementById('cart-total').innerText = "$" + cart.reduce((s,i)=>s+Number(i.Precio.replace(/\./g,'')),0).toLocaleString('es-AR');
         } else {
             bar.style.display = 'none';
         }
@@ -417,18 +356,17 @@
 
     function enviarWhatsApp() {
         const mesa = document.getElementById('ubicacion').value;
-        const total = cart.reduce((s, i) => s + Number(i.Precio), 0);
+        const total = cart.reduce((s,i)=>s+Number(i.Precio.replace(/\./g,'')),0).toLocaleString('es-AR');
         
-        let msj = `*NUEVO PEDIDO - ${mesa.toUpperCase()}*\n`;
-        msj += `------------------------------\n`;
-        cart.forEach(item => {
-            msj += `• ${item.Producto} ($${item.Precio})\n`;
-        });
-        msj += `------------------------------\n`;
-        msj += `*TOTAL: $${total.toLocaleString('es-AR')}*`;
-        
-        // El número ahora se toma de la variable cargada desde el Excel
-        window.open(`https://wa.me/${whatsappDefault}?text=${encodeURIComponent(msj)}`, '_blank');
+        let texto = `*NUEVO PEDIDO - ${mesa.toUpperCase()}*\n`;
+        texto += `------------------------------\n`;
+        cart.forEach(i => texto += `• ${i.Producto} ($${i.Precio})\n`);
+        texto += `------------------------------\n`;
+        texto += `*TOTAL A PAGAR: $${total}*\n\n`;
+        texto += `_Pedido enviado desde el Menú Digital_`;
+
+        const url = `https://wa.me/${WHATSAPP_DESTINO}?text=${encodeURIComponent(texto)}`;
+        window.open(url, '_blank');
     }
 </script>
 </body>
